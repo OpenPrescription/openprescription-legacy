@@ -1,0 +1,43 @@
+title Open Prescriptions System Flow
+
+box left of Doctor:1) Submit prescription PDF or write it\n2) Fill form: Patient data, expiration date, \nprivate (y/n), max uses\n3) Doctor scans the qr-code to \nsign the prescription with digital certificate\nBlockchain ID
+
+Doctor->Core Backend:prescription PDF\npatient name\npatient email\npatient doc id\nexpiration date\nprivate\nmax uses\ndigital signature
+
+abox over Core Backend: Has validated Doctor Id?\nif yes go Generate Certificate
+
+Doctor <-Core Backend: If no: Ask Doctor ID
+Doctor-->>Core Backend:Doctor ID
+
+box right of Core Backend: Validate Doctor ID \non Doctor Bureau
+
+box over Core Backend:Generate Certificate of Authenticity
+
+box over Core Backend:Authenticate prescription \nand certificate on blockchain
+
+box over Core Backend:Encrypt and store\nprescription and certificate
+
+Core Backend->Patient:Send email with\nprescription and certificate
+
+Patient->Pharmacy:Send prescription and \ncertificate through email \nor messenger
+
+box over Pharmacy:Submit received prescription \nor certificate file
+Core Backend<-Pharmacy:document hash
+
+note left of Core Backend: log verification attempt \n(future feature - ff)
+Core Backend->Pharmacy:data about the prescription
+
+box over Pharmacy: Is it valid?\nIs it expired?\nCan be used?\nPurchaser can buy?
+
+abox over Pharmacy: Drug dispense ok?
+
+
+Core Backend<-Pharmacy:pharmacy id, pharmacist id, prescription id, purchaser doc id
+
+Doctor<-Core Backend: drug dispensing\nconfirmation email
+Patient<-Core Backend: drug dispensing\nconfirmation email
+ 
+
+
+
+

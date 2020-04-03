@@ -1,0 +1,19 @@
+title Open Prescriptions User Flow
+
+box over Doctor:1) Submit prescription PDF or write it\n2) Fill form: Patient data, expiration date, \nprivate (y/n), max uses
+
+abox over Doctor: Confirm prescription?
+
+box over Doctor: Scan QR-Code with Blockchain ID\nto confirm
+
+
+Doctor->Patient:System sends email with prescription \nand certificate of authenticity
+
+Patient->Pharmacist:Sends through own email\nor preferreable messenger
+
+
+
+box over Pharmacist: 1) Validates the prescription and/or certificate\n2) Check and dispense the drug
+
+Pharmacist->Patient: Confirmation on drug dispensing
+Pharmacist->Doctor:Confirmation on drug dispensing
