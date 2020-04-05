@@ -8,11 +8,13 @@ As many countries lack about telemedicine or have treatments prescriptions on pa
 The platform has a simple flow for the 3 defined main actors: doctor, patient and pharmacist.
 
 ### Premises:
-* Privacy: Must preserve the privacy of the medical history of the patient
-* Confidentiality: Just the parties involved should access the content
-* Authenticity: All the generated data must be authenticated to prove the integrity of all documents transported
-* Proof-of-Authorship: The doctor must sign the prescription with a validated identity and using a digital certificate
-* Traceability: All actions of prescriptions and drug dispensing must be trackable.
+* Privacy: Must preserve the privacy of the medical prescriptions of the patient,
+* Confidentiality: Just the parties involved should access the content,
+* Proof-of-Authenticity: All the generated data must be authenticated to prove the integrity of all documents,
+* Proof-of-Authorship: The doctor must sign the prescription with a validated identity and using a digital certificate,
+* Proof-of-Consent: Every time personal data is requested to the patients they should agree, and the consent must be verifiable
+* Traceability: All actions must be trackable and auditable,
+* Transparent: The platform must be transparent and verifiable to leverage the Trust during the whole process
 
 ### Digital Identity
 A digital identity is needed for signing the prescriptions and authorising the drug dispensing.
@@ -39,7 +41,7 @@ Through countries API's or platforms to check the doctor speciality and their re
 ![docs/Open%20Prescriptions%20User%20Flow.png](https://raw.githubusercontent.com/OpenPrescription/openprescription/master/docs/Open%20Prescriptions%20User%20Flow.png)
 
 ### To do
-* Encrypted storage plugin
+* Encrypted (and possibly decentralised) storage plugin
 * Digital signatures by the pharmacist
 * Smart-contract(s) for activities repository
 
