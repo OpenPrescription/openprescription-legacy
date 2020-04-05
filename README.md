@@ -41,13 +41,13 @@ Through countries API's or platforms to check the doctor speciality and their re
 ![docs/Open%20Prescriptions%20User%20Flow.png](https://raw.githubusercontent.com/OpenPrescription/openprescription/master/docs/Open%20Prescriptions%20User%20Flow.png)
 
 ### To do
-* Encrypted (and possibly decentralised) storage plugin
+* Encrypted (and desirable decentralised) storage plugin
 * Digital signatures by the pharmacist
 * Smart-contract(s) for activities repository
 
 ### Sponsors, partnerships and contributors
-[OriginalMy](https://originalmy.com)
-[E-Pro Saúde](https://e-prosaude.com.br)
+* [OriginalMy](https://originalmy.com)
+* [E-Pro Saúde](https://e-prosaude.com.br)
 
 
 ### License
