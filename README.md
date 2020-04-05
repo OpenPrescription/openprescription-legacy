@@ -14,7 +14,7 @@ The platform has a simple flow for the 3 defined main actors: doctor, patient an
 * Proof-of-Authorship: The doctor must sign the prescription with a validated identity and using a digital certificate,
 * Proof-of-Consent: Every time personal data is requested to the patients they should agree, and the consent must be verifiable
 * Traceability: All actions must be trackable and auditable,
-* Transparent: The platform must be transparent and verifiable to leverage the Trust during the whole process
+* Transparency: The platform must be transparent and verifiable to leverage the Trust during the whole process
 
 ### Digital Identity
 A digital identity is needed for signing the prescriptions and authorising the drug dispensing.
