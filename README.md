@@ -12,7 +12,7 @@ The platform has a simple flow for the 3 defined main actors: doctor, patient an
 * Confidentiality: Just the parties involved should access the content,
 * Proof-of-Authenticity: All the generated data must be authenticated to prove the integrity of all documents,
 * Proof-of-Authorship: The doctor must sign the prescription with a validated identity and using a digital certificate,
-* Proof-of-Consent: Every time personal data is requested, the owner should agree, and the consent must be verifiable
+* Proof-of-Consent: Every time personal data is requested, the owner should agree, and the consent must be verifiable,
 * Traceability: All actions must be trackable and auditable,
 * Transparency: The platform must be transparent and verifiable to leverage the Trust during the whole process
 
@@ -51,4 +51,4 @@ Through countries API's or platforms to check the doctor speciality and their re
 
 
 ### License
-MIT
+Apache 2
