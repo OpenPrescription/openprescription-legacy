@@ -43,7 +43,7 @@ Through countries API's or platforms to check the doctor speciality and their re
 ### To do
 * Encrypted (and desirable decentralised) storage plugin
 * Digital signatures by the pharmacist
-* Smart-contract(s) for activities repository
+* Smart-contract(s) for activities repository. Should contain only anonimised data to be verified by governments, entities and regulators.
 
 ### Sponsors, partnerships and contributors
 * [OriginalMy](https://originalmy.com)
