@@ -5,6 +5,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import AppProviders from "./contexts";
 import Layout from "./components/Layout";
+import "./helpers/polyfill";
 
 ReactDOM.render(
   <React.StrictMode>
