@@ -48,6 +48,7 @@ Through countries API's or platforms to check the doctor speciality and their re
 ### Sponsors, partnerships and contributors
 * [OriginalMy](https://originalmy.com)
 * [E-Pro Saúde](http://e-prosaude.com.br)
+* [Digital Republic](https://digitalrepublic.com.br/)
 
 
 ### License
