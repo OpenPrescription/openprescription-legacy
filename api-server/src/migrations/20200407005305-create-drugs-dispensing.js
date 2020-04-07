@@ -22,11 +22,8 @@ module.exports = {
         allowNull: false
       },
       pharmacistId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Pharmacists",
-          key: "id"
-        }
+        type: Sequelize.STRING,
+        allowNull: false
       },
       purchaserDocumentId: {
         type: Sequelize.STRING,

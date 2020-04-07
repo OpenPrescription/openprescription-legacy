@@ -29,6 +29,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      doctorCompanyId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       hash: {
         type: Sequelize.STRING,
         unique: true,
