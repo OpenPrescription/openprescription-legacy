@@ -202,11 +202,11 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Typography variant="body2">Last use at</Typography>
+              <Typography variant="body2">Last Use At</Typography>
               <Typography variant="body1">{getFormattedDate(doctorData.lastUseAt)}</Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="body2">Uses Count</Typography>
+              <Typography variant="body2">Created At</Typography>
               <Typography variant="body1">{getFormattedDate(doctorData.createdAt)}</Typography>
             </Grid>
           </Grid>
@@ -217,13 +217,13 @@ export default () => {
             <Grid container spacing={2}>
               {doctorData.invalidAt && (
                 <Grid item xs={6}>
-                  <Typography variant="body2">Max Uses</Typography>
+                  <Typography variant="body2">Invalid At</Typography>
                   <Typography variant="body1">{getFormattedDate(doctorData.invalidAt)}</Typography>
                 </Grid>
               )}
               {doctorData.expiredAt && (
                 <Grid item xs={6}>
-                  <Typography variant="body2">Uses Count</Typography>
+                  <Typography variant="body2">Expired At</Typography>
                   <Typography variant="body1">{getFormattedDate(doctorData.expiredAt)}</Typography>
                 </Grid>
               )}
