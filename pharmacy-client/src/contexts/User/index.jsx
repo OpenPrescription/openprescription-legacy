@@ -4,7 +4,7 @@ import { useAuth } from "../Auth";
 const UserContext = React.createContext();
 
 const UserProvider = (props) => (
-  <UserContext.Provider value={useAuth().pharmacist} {...props} />
+  <UserContext.Provider value={useAuth().data.user} {...props} />
 );
 
 const useUser = () => React.useContext(UserContext);
