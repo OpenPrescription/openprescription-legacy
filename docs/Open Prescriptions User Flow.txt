@@ -6,12 +6,9 @@ abox over Doctor: Confirm prescription?
 
 box over Doctor: Scan QR-Code with Blockchain ID\nto confirm
 
-
 Doctor->Patient:System sends email with prescription \nand certificate of authenticity
 
 Patient->Pharmacist:Sends through own email\nor preferreable messenger
-
-
 
 box over Pharmacist: 1) Validates the prescription and/or certificate\n2) Check and dispense the drug
 
