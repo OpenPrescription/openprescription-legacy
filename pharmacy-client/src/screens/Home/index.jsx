@@ -166,11 +166,11 @@ export default () => {
           <Divider light className={divider} />
 
           <Grid container spacing={2}>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <Typography variant="body2">Patient Name</Typography>
               <Typography variant="body1">{doctorData.patientName}</Typography>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <Typography variant="body2">Patient Document ID</Typography>
               <Typography variant="body1">{doctorData.patientDocumentId}</Typography>
             </Grid>
