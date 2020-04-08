@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import sha256 from "crypto-js/sha256";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
