@@ -1,4 +1,7 @@
 {
-	"Your Prescription": "Your Prescription",
-	"prescription.pdf": "prescription.pdf"
+	"Your Prescription": "Sua Receita",
+	"prescription.pdf": "receita-medica.pdf",
+	"No": "Não",
+	"Yes": "Sim",
+	"prescription-certificate.pdf": "receita-certificado.pdf"
 }

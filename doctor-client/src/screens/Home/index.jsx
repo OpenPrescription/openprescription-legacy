@@ -35,8 +35,7 @@ export default () => {
   const [startSignProcess, handleSignProcess] = useState(false);
   const [prescription, setPrescription] = useState(false);
   const [validationError, setValidationError] = useState(null);
-  const [creationSuccess, setCreationSuccess] = useState(false);
-  const [creationError, setCreationError] = useState(false);
+  const [creationResponse, setCreationResponse] = useState(false);
 
   const onValidateDoctorId = (isValid, doctorId) => {
     if (isValid) {
@@ -63,10 +62,10 @@ export default () => {
       data.prescriptionFile = await toBase64(data.prescriptionFile[0]);
       await createPrescription(data);
       window.scrollTo(0, 0);
-      setCreationSuccess(true);
+      setCreationResponse("success");
     } catch (error) {
       window.scrollTo(0, 0);
-      setCreationError(true);
+      setCreationResponse("error");
       console.error(error);
     }
   };
@@ -104,7 +103,7 @@ export default () => {
         </Backdrop>
       )}
       <Container>
-        {creationSuccess && (
+        {creationResponse == "success" && (
           <Alert severity="success">
             <Trans i18nKey="prescriptionSuccessMessage">
               Prescription created with success. A e-mail was sent to patient
@@ -112,7 +111,7 @@ export default () => {
             </Trans>
           </Alert>
         )}
-        {creationError && (
+        {creationResponse == "error" && (
           <Alert severity="error">
             <Trans i18nKey="prescriptionUnkownErrorMessage">
               Could not create prescription. Please, try later.
