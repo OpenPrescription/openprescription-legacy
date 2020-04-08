@@ -11,6 +11,7 @@ import { getDoctorId } from "../../helpers/storage";
 import SignPrescription from "../../components/SignPrescription";
 import PrescriptionForm from "../../components/PrescriptionForm";
 import { createPrescription } from "../../data/prescriptions";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -34,6 +35,8 @@ export default () => {
   const [startSignProcess, handleSignProcess] = useState(false);
   const [prescription, setPrescription] = useState(false);
   const [validationError, setValidationError] = useState(null);
+  const [creationSuccess, setCreationSuccess] = useState(false);
+  const [creationError, setCreationError] = useState(false);
 
   const onValidateDoctorId = (isValid, doctorId) => {
     if (isValid) {
@@ -47,25 +50,36 @@ export default () => {
     }
   };
 
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
   const sendPrescription = async (data) => {
-    const prescriptionFormData = new FormData();
-    for (const name in data) {
-      const value = data[name];
-      prescriptionFormData.append(name, value);
-    }
     try {
-      const response = await createPrescription(prescriptionFormData);
+      data.prescriptionFile = await toBase64(data.prescriptionFile[0]);
+      await createPrescription(data);
+      window.scrollTo(0, 0);
+      setCreationSuccess(true);
     } catch (error) {
+      window.scrollTo(0, 0);
+      setCreationError(true);
       console.error(error);
     }
   };
 
-  const onPrescriptionSigned = async (user) => {
+  const onPrescriptionSigned = async (doctor) => {
     handleSignProcess(false);
     setLoading(true);
     const data = {
       ...prescription,
-      doctor: user,
+      doctor: JSON.stringify(doctor),
+      expirationDate: moment(prescription.expirationDate).format(
+        "YYYY-MM-DD HH:mm:ss"
+      ),
     };
     await sendPrescription(data);
     setLoading(false);
@@ -82,17 +96,29 @@ export default () => {
     handleSignProcess(true);
   };
 
-  if (loading) {
-    return (
-      <Backdrop className={classes.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    );
-  }
-
   return (
     <div className={classes.heroContent}>
+      {loading && (
+        <Backdrop className={classes.backdrop} open={loading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Container>
+        {creationSuccess && (
+          <Alert severity="success">
+            <Trans i18nKey="prescriptionSuccessMessage">
+              Prescription created with success. A e-mail was sent to patient
+              with prescription document.
+            </Trans>
+          </Alert>
+        )}
+        {creationError && (
+          <Alert severity="error">
+            <Trans i18nKey="prescriptionUnkownErrorMessage">
+              Could not create prescription. Please, try later.
+            </Trans>
+          </Alert>
+        )}
         <Typography variant="h4" component="h2">
           <Trans i18nKey="helloDoctor">Hello, Doctor</Trans>
         </Typography>

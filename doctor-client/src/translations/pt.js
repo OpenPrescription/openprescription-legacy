@@ -20,5 +20,13 @@ export default {
   patientDocumentIdFieldRequiredError: "CPF do paciente é obrigatório",
   patientPrescriptionFieldRequiredError: "Receita é obrigatória",
   patientEmailFieldInvalidError: "Email do paciente é inválido",
-  privateCheckboxHelper: "Se marcado, apenas o paciente pode usar esta receita para comprar medicamentos",
+  privateCheckboxHelper:
+    "Se marcado, apenas o paciente pode usar esta receita para comprar medicamentos",
+  doctorCompanyIDLabel: "CNPJ",
+  doctorCompanyIDHelper: "CNPJ do hospital, escritório ou empresa que trabalha",
+  doctorCompanyFieldRequiredError: "CNPJ é obrigatório",
+  prescriptionSuccessMessage:
+    "Receita criada com sucesso. Uma cópia foi enviado para o paciente por e-mail.",
+  prescriptionUnkownErrorMessage:
+    "Não foi possível cadastrar a receita. Tente novamente mais tarde.",
 };
