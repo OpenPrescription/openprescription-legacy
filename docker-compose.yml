@@ -1,9 +1,13 @@
-version: '3.4'
+version: "3.4"
 
 services:
   api-server:
     container_name: OpenPrescriptionAPI
-    build: ./api-server
+    network_mode: host
+    build:
+      context: ./api-server
+      network: host
+      dockerfile: Dockerfile
     environment:
       API_HOST: ${API_HOST}
       PORT: ${API_SERVER_PORT}
@@ -16,11 +20,17 @@ services:
     command: yarn run dev
   doctor-client:
     container_name: OpenPrescriptionDoctorClient
-    build: ./doctor-client
+    network_mode: host
+    build:
+      context: ./doctor-client
+      network: host
+      dockerfile: Dockerfile
     environment:
       PORT: ${REACT_APP_DOCTOR_CLIENT_PORT}
       APP_SERVER_PORT: ${DOCTOR_SERVER_PORT}
       API_HOST: ${API_HOST}
+      API_KEY: ${API_KEY}
+      APP_HOST: ${DOCTOR_CLIENT_HOST}
       ORIGINALMY_API_URL: ${ORIGINALMY_API_URL}
       ORIGINALMY_SECRET_KEY: ${ORIGINALMY_SECRET_KEY}
       ORIGINALMY_CLIENT_ID: ${ORIGINALMY_CLIENT_ID}
@@ -33,16 +43,23 @@ services:
     ports:
       - ${REACT_APP_DOCTOR_CLIENT_PORT}:${REACT_APP_DOCTOR_CLIENT_PORT}
     volumes:
+      - ./doctor-client/server:/home/node/openprescription/doctor-client/server
       - ./doctor-client/src:/home/node/openprescription/doctor-client/src
       - ./doctor-client/public:/home/node/openprescription/doctor-client/public
     command: npm start
   phamacy-client:
     container_name: OpenPrescriptionPharmacyClient
-    build: ./pharmacy-client
+    network_mode: host
+    build: 
+      context: ./pharmacy-client
+      network: host
+      dockerfile: Dockerfile
     environment:
       PORT: ${REACT_APP_PHARMACY_CLIENT_PORT}
       APP_SERVER_PORT: ${PHARMACY_SERVER_PORT}
+      APP_HOST: ${PHARMACY_CLIENT_HOST}
       API_HOST: ${API_HOST}
+      API_KEY: ${API_KEY}
       ORIGINALMY_API_URL: ${ORIGINALMY_API_URL}
       ORIGINALMY_SECRET_KEY: ${ORIGINALMY_SECRET_KEY}
       ORIGINALMY_CLIENT_ID: ${ORIGINALMY_CLIENT_ID}
@@ -55,7 +72,7 @@ services:
     ports:
       - ${REACT_APP_PHARMACY_CLIENT_PORT}:${REACT_APP_PHARMACY_CLIENT_PORT}
     volumes:
+      - ./pharmacy-client/server:/home/node/openprescription/pharmacy-client/server
       - ./pharmacy-client/src:/home/node/openprescription/pharmacy-client/src
       - ./pharmacy-client/public:/home/node/openprescription/pharmacy-client/public
     command: npm start
-

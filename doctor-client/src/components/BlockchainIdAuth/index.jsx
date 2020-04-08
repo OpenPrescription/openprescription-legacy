@@ -34,8 +34,8 @@ export default ({
     setAuthIntervalStatus(false);
     const userResponse = await fetchUserByNonce(nonceId);
     const user = {};
-    for (const key in userResponse.data) {
-      const element = userResponse.data[key];
+    for (const key in userResponse.data.data) {
+      const element = userResponse.data.data[key];
       user[key] = element.value;
     }
     if (typeof props.onAuthentication === "function")

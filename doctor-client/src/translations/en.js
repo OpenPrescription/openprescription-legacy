@@ -20,5 +20,13 @@ export default {
   patientDocumentIdFieldRequiredError: "Document ID is required",
   patientPrescriptionFieldRequiredError: "Prescription is required",
   patientEmailFieldInvalidError: "Patient email is invalid",
-  privateCheckboxHelper: "If checked only patient can use this prescription to buy medicines",
+  privateCheckboxHelper:
+    "If checked only patient can use this prescription to buy medicines",
+  doctorCompanyIDLabel: "Company ID",
+  doctorCompanyIDHelper: "Fill with your Hospital ID, Office ID or Company ID",
+  doctorCompanyFieldRequiredError: "Doctor Company ID is required",
+  prescriptionSuccessMessage:
+    "Prescription created with success. A e-mail was sent to patient with prescription document.",
+  prescriptionUnkownErrorMessage:
+    "Could not create prescription. Please, try later.",
 };

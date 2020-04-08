@@ -22,6 +22,7 @@ export default ({ prescription, onSigned }) => {
       prescriptionHash: prescription.hash,
       expirationDate: prescription.expirationDate,
       maxUses: prescription.maxUses,
+      doctorCompanyId: prescription.doctorCompanyId,
     })}`,
   ];
 
@@ -43,7 +44,6 @@ export default ({ prescription, onSigned }) => {
             active={active}
             infos={blockchainIdInfos}
             onAuthentication={(user) => {
-              setActive(false);
               onSigned(user);
             }}
           />

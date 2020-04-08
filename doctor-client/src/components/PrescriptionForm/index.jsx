@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(0, 0, 2, 0),
     display: "block",
     "& input": {
-      width: 250,
+      width: 350,
     },
   },
 }));
@@ -44,16 +44,16 @@ export default ({ onSubmit }) => {
 
   const onUploadPrescription = (files) => {
     setPrescriptionFile(files[0]);
-    const reader = new FileReader();
-    reader.onload = function () {
-      try {
+    try {
+      const reader = new FileReader();
+      reader.onload = function () {
         const hash = sha256(reader.getAsOriginalMyString());
         setHash(hash.toString());
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    reader.readAsOriginalMy(files[0]);
+      };
+      reader.readAsOriginalMy(files[0]);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleFormSubmit = (data) => {
@@ -161,6 +161,29 @@ export default ({ onSubmit }) => {
               </Trans>
             </FormHelperText>
           )}
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <TextField
+            required
+            id="doctorCompanyId"
+            name="doctorCompanyId"
+            label={t("doctorCompanyIDLabel")}
+            autoComplete="dccompanyid"
+            inputRef={register({ required: true })}
+            error={Boolean(errors.doctorCompanyId)}
+          />
+          {errors.patientId && (
+            <FormHelperText error={true}>
+              <Trans i18nKey="doctorCompanyFieldRequiredError">
+                Doctor Company ID is required
+              </Trans>
+            </FormHelperText>
+          )}
+          <FormHelperText>
+            <Trans i18nKey="doctorCompanyIDHelper">
+              Doctor Company ID is required
+            </Trans>
+          </FormHelperText>
         </FormControl>
         <FormControl className={classes.formControl}>
           <TextField
