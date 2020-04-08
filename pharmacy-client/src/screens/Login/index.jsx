@@ -9,6 +9,7 @@ import { Redirect, useHistory, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { Trans, useTranslation } from "react-i18next";
+import { useAuth } from "../../contexts/Auth";
 // JAVASCRIPT
 // -------------------------------------------------------------------
 
@@ -19,10 +20,10 @@ export default () => {
   let history = useHistory();
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
+  const { login } = useAuth();
 
   const onSubmit = ({ documentId, companyId }) => {
-    const data = JSON.stringify({ documentId, companyId });
-    window.localStorage.setItem(USER_STORAGE_KEY, data);
+    login({ documentId, companyId });
     history.replace(from);
   };
 
