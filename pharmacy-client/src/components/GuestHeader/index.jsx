@@ -30,7 +30,6 @@ export default () => {
           <Typography variant="h6" color="inherit" className={classes.title}>
             Open Prescription
           </Typography>
-          <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
     </header>
