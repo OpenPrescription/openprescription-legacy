@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default ({ label, inputProps, multiple, onChange }) => {
+export default ({ label, inputProps, multiple, onChange, lableStyle = {}, buttonStyle = {}, containerStyle = {} }) => {
   const classes = useStyles();
 
   const onInputChange = (files) => {
@@ -17,7 +17,7 @@ export default ({ label, inputProps, multiple, onChange }) => {
     }
   };
   return (
-    <>
+    <div style={containerStyle}>
       <input
         className={classes.prescriptionInput}
         multiple={multiple}
@@ -25,11 +25,16 @@ export default ({ label, inputProps, multiple, onChange }) => {
         onChange={(e) => onInputChange(e.currentTarget.files)}
         {...inputProps}
       />
-      <label htmlFor={inputProps.id}>
-        <Button variant="contained" color="primary" component="span">
+      <label htmlFor={inputProps.id} style={lableStyle}>
+        <Button
+          variant="contained"
+          color="primary"
+          component="span"
+          style={buttonStyle}
+        >
           {label}
         </Button>
       </label>
-    </>
+    </div>
   );
 };
