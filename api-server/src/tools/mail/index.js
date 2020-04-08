@@ -1,5 +1,5 @@
 //reference the plugin
-import transporter from "./mail-transporter";
+import transporter from "../mail-transporter";
 
 export default class Mail {
   constructor(context) {
@@ -7,13 +7,26 @@ export default class Mail {
     this.template = undefined;
   }
 
-  from(email) {
-    this.from = email;
+  static to(email) {
+    const mail = new Mail();
+    mail.to = email;
+    return mail;
+  }
+
+  with(context) {
+    this.context = context;
     return this;
   }
 
-  to(email) {
+  from(email, name = null) {
+    this.from = email;
+    if (name) this.from = `${name}<${email}>`;
+    return this;
+  }
+
+  to(email, name = null) {
     this.to = email;
+    if (name) this.to = `${name}<${email}>`;
     return this;
   }
 

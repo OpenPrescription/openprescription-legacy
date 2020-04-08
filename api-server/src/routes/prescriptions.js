@@ -19,7 +19,19 @@ Router.post("/", async (req, res) => {
     const doctor = await DoctorRepository.store.getOrCreate(reqDoctor);
     data.digitalSignature = reqDoctor.block;
     data.ip = ip;
-    await PrescriptionRepository.store.create(doctor, document, data);
+    await PrescriptionRepository.store.create(
+      doctor,
+      document.split(",")[1],
+      data
+    );
+    return res.success();
+  } catch (err) {
+    return res.error(err);
+  }
+});
+
+Router.get("/dispensing", (req, res) => {
+  try {
     return res.success();
   } catch (err) {
     return res.error(err);

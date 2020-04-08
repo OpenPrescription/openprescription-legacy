@@ -2,6 +2,7 @@ import hbs from "nodemailer-express-handlebars";
 import handlebars from "express-handlebars";
 import nodemailer from "nodemailer";
 import path from "path";
+import i18n from "i18n";
 
 const smtpConfig = {
   host: process.env.MAIL_HOST,
@@ -19,16 +20,20 @@ transporter.use(
   hbs({
     viewEngine: handlebars.create({
       extname: "hbs",
-      layoutsDir: path.resolve(__dirname, "../views/mails/layouts/"),
+      layoutsDir: path.resolve(__dirname, "../../views/mails/layouts/"),
       defaultLayout: "main",
-      partialsDir: path.resolve(
-        __dirname,
-        "../views/mails/partials/"
-      )
+      partialsDir: path.resolve(__dirname, "../../views/mails/partials/"),
+      helpers: {
+        __: function () {
+          return i18n.__.apply(this, arguments);
+        },
+        __n: function () {
+          return i18n.__n.apply(this, arguments);
+        },
+      },
     }),
-    viewPath: path.resolve(__dirname, "..", "views/mails"),
+    viewPath: path.resolve(__dirname, "../../", "views/mails"),
     extName: ".hbs",
   })
 );
-
 export default transporter;
