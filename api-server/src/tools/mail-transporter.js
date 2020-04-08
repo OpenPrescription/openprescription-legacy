@@ -19,11 +19,11 @@ transporter.use(
   hbs({
     viewEngine: handlebars.create({
       extname: "hbs",
-      layoutsDir: path.resolve(__dirname, "../templates/notification/layouts/"),
+      layoutsDir: path.resolve(__dirname, "../views/mails/layouts/"),
       defaultLayout: "main",
       partialsDir: path.resolve(
         __dirname,
-        "../templates/notification/partials/"
+        "../views/mails/partials/"
       )
     }),
     viewPath: path.resolve(__dirname, "..", "views/mails"),
