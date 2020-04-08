@@ -6,6 +6,7 @@ import * as serviceWorker from "./serviceWorker";
 import AppProviders from "./contexts";
 import Layout from "./components/Layout";
 import "./helpers/polyfill";
+import "./helpers/i18n";
 
 ReactDOM.render(
   <React.StrictMode>
