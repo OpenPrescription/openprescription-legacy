@@ -6,10 +6,12 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/Button"
+import MenuItem from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../contexts/Auth";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -23,9 +25,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   menuItemBlock: {
-    display: 'block',
-    width: '100%'
-  }
+    display: "block",
+    width: "100%",
+  },
 }));
 
 export default () => {
@@ -33,6 +35,7 @@ export default () => {
   const { i18n } = useTranslation();
   const [language, setLanguage] = useState(i18n.language);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const { logout } = useAuth();
 
   const handleSelectLanguage = (event, lang) => {
     if (!lang) return setAnchorEl(event.currentTarget);
@@ -43,6 +46,10 @@ export default () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -68,6 +75,14 @@ export default () => {
             {language}
             <KeyboardArrowDownIcon />
           </Button>
+          <Button
+            color="inherit"
+            aria-controls="language-menu"
+            aria-haspopup="true"
+            onClick={handleLogout}
+          >
+            <ExitToAppIcon/>
+          </Button>
         </Toolbar>
         <Menu
           id="language-menu"
@@ -76,10 +91,16 @@ export default () => {
           onClose={handleClose}
           keepMounted
         >
-          <MenuItem className={classes.menuItemBlock} onClick={(e) => handleSelectLanguage(e, "en")}>
+          <MenuItem
+            className={classes.menuItemBlock}
+            onClick={(e) => handleSelectLanguage(e, "en")}
+          >
             English
           </MenuItem>
-          <MenuItem className={classes.menuItemBlock} onClick={(e) => handleSelectLanguage(e, "pt")}>
+          <MenuItem
+            className={classes.menuItemBlock}
+            onClick={(e) => handleSelectLanguage(e, "pt")}
+          >
             Português
           </MenuItem>
         </Menu>
