@@ -35,8 +35,9 @@ export default () => {
       left: "50%",
       top: "50%",
       transform: "translate(-50%, -50%)",
-      padding: "120px",
+      padding: theme.spacing(3, 3, 3, 3),
       backgroundColor: theme.palette.background.paper,
+      maxWidth: 350,
     },
     icon: {
       display: "block",
