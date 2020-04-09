@@ -44,6 +44,7 @@ const pharmacyResume = async (hash) => {
       documentId: prescription.patientDocumentId,
     },
     prescription: {
+      id: prescription.id,
       maxUses: prescription.maxUses,
       usesCount,
       lastUseAt: usesCount ? dispensing[0].createdAt : null,
