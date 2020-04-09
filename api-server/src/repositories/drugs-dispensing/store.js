@@ -1,5 +1,16 @@
 const { DrugsDispensing } = require("../../models");
 
-export const create = () => {
-  
+const create = (pharmacistId, pharmacyId, hash, ip) => {
+  DrugsDispensing.create({
+    prescriptionId,
+    pharmacyId,
+    pharmacistId,
+    purchaserDocumentId,
+    digitalSignature,
+    ip,
+  });
+};
+
+export default {
+  create,
 };

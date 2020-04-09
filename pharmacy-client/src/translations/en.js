@@ -4,5 +4,7 @@ export default {
   documentIdRequired: "Document ID is required",
   companyIdRequired: "Company ID is required",
   prescriptionNotFoundError: "Prescription not found",
-  prescriptionUnexpectedError: "Unexpected error. Try again later."
+  prescriptionUnexpectedError: "Unexpected error. Try again later.",
+  purchaserIdRequired: "Purchaser ID is required",
+  neverUsed: "Nerver used"
 };

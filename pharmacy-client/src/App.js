@@ -1,10 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import {
-  Login,
-  Home,
-  NoMatch
-} from "./screens";
+import { Login, Home, NoMatch } from "./screens";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
@@ -14,7 +10,7 @@ function App() {
         <Route path="/login">
           <Login />
         </Route>
-        <PrivateRoute path="/" exact>
+        <PrivateRoute path="/:pathHash?" exact>
           <Home />
         </PrivateRoute>
         <Route path="*">

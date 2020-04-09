@@ -1,16 +1,17 @@
 import express from "express";
 import multer from "multer";
-import { PrescriptionRepository, DoctorRepository } from "../repositories";
+import {
+  PrescriptionRepository,
+  DoctorRepository,
+  DrugDispensingRepository,
+} from "../repositories";
+import { getIPFromRequest } from "../tools/ip";
 
 const Router = express.Router();
 
 Router.post("/", async (req, res) => {
   try {
-    const ip =
-      req.headers["x-forwarded-for"] ||
-      req.connection.remoteAddress ||
-      req.socket.remoteAddress ||
-      req.connection.socket.remoteAddress;
+    const ip = getIPFromRequest(req);
     const document = req.body.prescriptionFile;
     const reqDoctor = JSON.parse(req.body.doctor);
     const data = req.body;
@@ -31,16 +32,19 @@ Router.post("/", async (req, res) => {
 
 Router.get("/resume", async (req, res) => {
   try {
-    const data =  await PrescriptionRepository.find.pharmacyResume(req.query.hash);
+    const data = await PrescriptionRepository.find.pharmacyResume(
+      req.query.hash
+    );
     return res.success(data);
   } catch (err) {
     return res.error(err);
   }
 });
 
-
-Router.get("/dispensing", (req, res) => {
+Router.post("/dispensing", (req, res) => {
   try {
+    const ip = getIPFromRequest(req);
+    DrugDispensingRepository.store.create(req.body.documentId);
     return res.success();
   } catch (err) {
     return res.error(err);

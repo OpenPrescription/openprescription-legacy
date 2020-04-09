@@ -1,4 +1,4 @@
-import { Prescription, Sequelize, Doctor } from "../../models";
+import { Prescription, Sequelize, Doctor, DrugsDispensing } from "../../models";
 import PrescriptionNotFoundError from "../../errors/prescription-not-found";
 const Op = Sequelize.Op;
 
@@ -10,9 +10,15 @@ const pharmacyResume = async (hash) => {
         certificateHash: hash,
       },
     },
-    include: {
-      model: Doctor,
-    },
+    include: [
+      {
+        model: Doctor,
+      },
+      {
+        model: DrugsDispensing,
+        order: [["createdAt", "DESC"]],
+      },
+    ],
   });
   if (prescription == null) throw new PrescriptionNotFoundError();
 
@@ -21,12 +27,15 @@ const pharmacyResume = async (hash) => {
   const blockchainid = digitalSignaturePieces[1];
   const signature = digitalSignaturePieces[2];
   const block = digitalSignaturePieces[3];
+  const dispensing = prescription.DrugsDispensings;
+  const usesCount = dispensing.length;
+  const doctor = prescription.Doctor;
   return {
     doctor: {
-      name: prescription.Doctor.name,
-      documentId: prescription.Doctor.documentId,
-      blockchainid: prescription.Doctor.blockchainId,
-      email: prescription.Doctor.email,
+      name: doctor.name,
+      documentId: doctor.documentId,
+      blockchainid: doctor.blockchainId,
+      email: doctor.email,
       companyId: prescription.doctorCompanyId,
     },
     patient: {
@@ -36,8 +45,8 @@ const pharmacyResume = async (hash) => {
     },
     prescription: {
       maxUses: prescription.maxUses,
-      usesCount: 1,
-      lastUseAt: "2019-04-07T11:31:00Z",
+      usesCount,
+      lastUseAt: usesCount ? dispensing[0].createdAt : null,
       createdAt: prescription.createdAt,
       invalidAt: prescription.invalidAt,
       expirationDate: prescription.expiredAt,
