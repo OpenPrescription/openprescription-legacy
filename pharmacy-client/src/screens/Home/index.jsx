@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import sha256 from "crypto-js/sha256";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -14,9 +14,15 @@ import Backdrop from "@material-ui/core/Backdrop";
 import DialogContent from "@material-ui/core/DialogContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { fetchResume as fetchPrescriptionResume } from "../../data/prescriptions";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import {
+  fetchResume as fetchPrescriptionResume,
+  sendDispensing as sendPrescriptionDispensing,
+} from "../../data/prescriptions";
 import { Trans, useTranslation } from "react-i18next";
 import Alert from "@material-ui/lab/Alert";
+import { useUser } from "../../contexts/User";
+import { useHistory, useParams } from "react-router-dom";
 
 export default () => {
   const [prescriptionFile, setPrescriptionFile] = useState(null);
@@ -24,8 +30,17 @@ export default () => {
   const [prescriptionData, setPrescriptionData] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [buyerDocumentId, setBuyerDocumentId] = useState("");
+  const [purchaserDocumentId, setPurchaserDocumentId] = useState("");
   const [fetchResponse, setFetchResponse] = useState(false);
+  const [purchaserError, setPurchaserError] = useState(false);
+  const [
+    prescriptionDispensingStatus,
+    setPrescriptionDispensingStatus,
+  ] = useState("");
+  const user = useUser();
+  const { t } = useTranslation();
+  let history = useHistory();
+  let { pathHash } = useParams();
 
   const toSha256 = (file) =>
     new Promise((resolve, reject) => {
@@ -39,11 +54,13 @@ export default () => {
     setLoading(true);
     setPrescriptionFile(files[0]);
     const hash = await toSha256(files[0]);
-    try {
-      await getPrecription(hash.toString());
-    } catch (e) {
-      console.error(e);
-    }
+    //setHash(hash);
+    // try {
+    history.push(`${hash}`);
+    // await getPrecription(hash.toString());
+    // } catch (e) {
+    //   console.error(e);
+    // }
     setLoading(false);
   };
 
@@ -55,7 +72,7 @@ export default () => {
       setPrescriptionData(data);
       setFetchResponse("success");
     } catch (err) {
-      switch (err.response.status) {
+      switch (err.response && err.response.status) {
         case 404:
           setFetchResponse("404");
           break;
@@ -66,23 +83,31 @@ export default () => {
     }
   };
 
-  const sendDispensa = (e) => {
+  const sendDispensa = async (e) => {
     e.preventDefault();
-    const userData = JSON.parse(window.localStorage.getItem("USER_DATA"));
-    const data = { ...userData, hash, buyerDocumentId };
-    console.log(data);
-
-    console.log("---------------------");
-    console.log("SUCCESS");
-    console.log("---------------------");
-    setPrescriptionData(null);
-    setModalOpen(false);
-    setHash(null);
-    setPrescriptionFile(null);
-    setBuyerDocumentId("");
+    const data = {
+      pharmacist: {
+        documentId: user.documentId,
+        companyId: user.companyId,
+      },
+      purchaserDocumentId,
+      prescriptionId: prescriptionData.id,
+    };
+    if (!purchaserDocumentId) {
+      setPurchaserError(true);
+    } else {
+      setPurchaserError(false);
+    }
+    try {
+      await sendPrescriptionDispensing(data);
+      setPrescriptionDispensingStatus("success");
+    } catch (err) {
+      setPrescriptionDispensingStatus("error");
+    }
   };
 
   const getFormattedDate = (date) => {
+    if (!date) return null;
     const newDate = new Date(date);
     return newDate.toLocaleDateString("en-US", {
       year: "numeric",
@@ -103,7 +128,7 @@ export default () => {
       backgroundColor: theme.palette.background.paper,
     },
     solidContainer: {
-      paddingTop: "60px",
+      paddingTop: theme.spacing(4),
       marginBottom: theme.spacing(6),
     },
     input: {
@@ -140,6 +165,12 @@ export default () => {
     modalTitle,
   } = useStyles();
 
+  useEffect(() => {
+    if (pathHash) {
+      getPrecription(pathHash);
+    }
+  }, [pathHash]);
+
   return (
     <section>
       {fetchResponse == "404" && (
@@ -156,13 +187,27 @@ export default () => {
           </Trans>
         </Alert>
       )}
+      {prescriptionDispensingStatus == "error" && (
+        <Alert severity="error">
+          <Trans i18nKey="prescriptionDispensingUnexpectedError">
+            Unexpected error. Try again later.
+          </Trans>
+        </Alert>
+      )}
+      {prescriptionDispensingStatus == "success" && (
+        <Alert severity="error">
+          <Trans i18nKey="prescriptiondispensedSuccess"></Trans>
+        </Alert>
+      )}
+      <Container maxWidth="sm" style={{ paddingTop: 20 }}>
+        <Typography variant="body2">
+          Pharmacist Logged: {user.documentId}
+        </Typography>
       <UploadInput
         multiple={false}
         onChange={onUploadPrescription}
         containerStyle={{
           display: "flex",
-          alignContent: "center",
-          justifyContent: "center",
           width: "100%",
           paddingTop: "2rem",
         }}
@@ -173,6 +218,7 @@ export default () => {
           accept: ".pdf",
         }}
       />
+      </Container>
       {prescriptionData && (
         <Container maxWidth="sm" className={solidContainer}>
           <Grid container spacing={2}>
@@ -196,7 +242,7 @@ export default () => {
             <Grid item xs={12}>
               <Typography variant="body2">Doctor Blockchain ID</Typography>
               <Typography variant="body1">
-                {prescriptionData.doctor.blockchainId}
+                {prescriptionData.doctor.blockchainid}
               </Typography>
             </Grid>
           </Grid>
@@ -204,13 +250,13 @@ export default () => {
           <Divider light className={divider} />
 
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <Typography variant="body2">Doctor E-mail</Typography>
               <Typography variant="body1">
                 {prescriptionData.doctor.email}
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <Typography variant="body2">Doctor Company ID</Typography>
               <Typography variant="body1">
                 {prescriptionData.doctor.companyId}
@@ -258,7 +304,7 @@ export default () => {
             <Grid item xs={6}>
               <Typography variant="body2">Uses Count</Typography>
               <Typography variant="body1">
-                {prescriptionData.usesCount}
+                {prescriptionData.prescription.usesCount}
               </Typography>
             </Grid>
           </Grid>
@@ -269,7 +315,8 @@ export default () => {
             <Grid item xs={6}>
               <Typography variant="body2">Last Use At</Typography>
               <Typography variant="body1">
-                {getFormattedDate(prescriptionData.prescription.lastUseAt)}
+                {getFormattedDate(prescriptionData.prescription.lastUseAt) ||
+                  t("neverUsed")}
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -308,13 +355,33 @@ export default () => {
               </Grid>
             ))}
 
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="body2">Signature</Typography>
+              <Typography variant="body1" style={{ wordBreak: "break-all" }}>
+                {prescriptionData.block.signature}
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Divider light className={divider} />
+
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="body2">Message</Typography>
+              <Typography variant="body1" style={{ wordBreak: "break-all" }}>
+                {prescriptionData.block.message}
+              </Typography>
+            </Grid>
+          </Grid>
+
           <Button
             variant="contained"
             color="secondary"
             className={button}
             onClick={() => setModalOpen(true)}
           >
-            Checkout
+            Dispense
           </Button>
           {modalOpen && (
             <Dialog
@@ -323,23 +390,31 @@ export default () => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle className={modalTitle} id="alert-dialog-title">
-                Insert buyer document ID to finish
+                Insert purchaser document ID to finish
               </DialogTitle>
               <DialogContent className={modalContent}>
                 <form noValidate onSubmit={sendDispensa}>
                   <TextField
                     autoFocus
                     margin="dense"
-                    id="buyerDocumentId"
-                    name="buyerDocumentId"
-                    label="Buyer Document ID"
+                    id="purchaserDocumentId"
+                    name="purchaserDocumentId"
+                    label="Purchaser Document ID"
                     type="text"
                     fullWidth
                     required
-                    onChange={(e) => setBuyerDocumentId(e.target.value)}
-                    value={buyerDocumentId}
+                    onChange={(e) => setPurchaserDocumentId(e.target.value)}
+                    value={purchaserDocumentId}
                     className={input}
+                    error={purchaserError}
                   />
+                  {purchaserError && (
+                    <FormHelperText error={true}>
+                      <Trans i18nKey="purchaserIdRequired">
+                        Purchaser ID is required
+                      </Trans>
+                    </FormHelperText>
+                  )}
                   <Button
                     type="submit"
                     variant="contained"

@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
     disabledAt: DataTypes.DATE
   }, {});
   Prescription.associate = function(models) {
-    Prescription.belongsTo(models.Doctor);
+    Prescription.belongsTo(models.Doctor, { foreignKey: 'doctorId' });
+    Prescription.hasMany(models.DrugsDispensing, { foreignKey: 'prescriptionId' });
   };
   return Prescription;
 };

@@ -10,7 +10,10 @@ Router.get("/user/:nonce", async (req, res) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "84N8-QYNC-P26K",
+        Authorization: new Buffer(
+          process.env.ORIGINALMY_SECRET_KEY,
+          "base64"
+        ).toString(),
         Origin: process.env.APP_HOST,
       },
       json: true,
