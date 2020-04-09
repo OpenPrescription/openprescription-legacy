@@ -10,6 +10,7 @@ module.exports = {
       },
       prescriptionId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           // This is a reference to another model
           model: "Prescriptions",

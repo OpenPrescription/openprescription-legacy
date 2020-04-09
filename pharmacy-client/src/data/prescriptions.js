@@ -10,6 +10,6 @@ export const fetchResume = (hash) => {
 
 export const sendDispensing = (data) => {
   return axios.post("/api/proxy/prescriptions/dispensing", {
-    data,
+    ...data,
   });
 };
