@@ -40,7 +40,7 @@ app.use(
 );
 
 app.use(
-  "/api/open-prescription-proxy/",
+  "/api/proxy/",
   proxy(process.env.API_HOST, {
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
       // you can update headers

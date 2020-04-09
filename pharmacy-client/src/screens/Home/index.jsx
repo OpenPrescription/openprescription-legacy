@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import sha256 from "crypto-js/sha256";
-import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Typography from "@material-ui/core/Typography";
@@ -15,14 +14,18 @@ import Backdrop from "@material-ui/core/Backdrop";
 import DialogContent from "@material-ui/core/DialogContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { fetchResume as fetchPrescriptionResume } from "../../data/prescriptions";
+import { Trans, useTranslation } from "react-i18next";
+import Alert from "@material-ui/lab/Alert";
 
 export default () => {
   const [prescriptionFile, setPrescriptionFile] = useState(null);
   const [hash, setHash] = useState(null);
-  const [doctorData, setDoctorData] = useState(null);
+  const [prescriptionData, setPrescriptionData] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [buyerDocumentId, setBuyerDocumentId] = useState("");
+  const [fetchResponse, setFetchResponse] = useState(false);
 
   const toSha256 = (file) =>
     new Promise((resolve, reject) => {
@@ -34,6 +37,7 @@ export default () => {
 
   const onUploadPrescription = async (files) => {
     setLoading(true);
+    setPrescriptionFile(files[0]);
     const hash = await toSha256(files[0]);
     try {
       await getPrecription(hash.toString());
@@ -44,15 +48,22 @@ export default () => {
   };
 
   const getPrecription = async (hash) => {
-    axios
-      .post("http://www.mocky.io/v2/5e8c92232f0000132288cd08", { hash })
-      .then(function ({ data }) {
-        setDoctorData(data);
-        console.log(data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    try {
+      const {
+        data: { data },
+      } = await fetchPrescriptionResume(hash);
+      setPrescriptionData(data);
+      setFetchResponse("success");
+    } catch (err) {
+      switch (err.response.status) {
+        case 404:
+          setFetchResponse("404");
+          break;
+        default:
+          setFetchResponse("error");
+          break;
+      }
+    }
   };
 
   const sendDispensa = (e) => {
@@ -64,7 +75,7 @@ export default () => {
     console.log("---------------------");
     console.log("SUCCESS");
     console.log("---------------------");
-    setDoctorData(null);
+    setPrescriptionData(null);
     setModalOpen(false);
     setHash(null);
     setPrescriptionFile(null);
@@ -131,40 +142,50 @@ export default () => {
 
   return (
     <section>
-      {!doctorData && (
-        <UploadInput
-          multiple={false}
-          onChange={onUploadPrescription}
-          containerStyle={{
-            display: "flex",
-            alignContent: "center",
-            justifyContent: "center",
-            width: "100%",
-            paddingTop: "6rem",
-          }}
-          label={
-            prescriptionFile
-              ? prescriptionFile.name
-              : "Click here to upload your file"
-          }
-          inputProps={{
-            id: "prescriptionFile",
-            name: "prescriptionFile",
-            accept: ".pdf",
-          }}
-        />
+      {fetchResponse == "404" && (
+        <Alert severity="error">
+          <Trans i18nKey="prescriptionNotFoundError">
+            Prescription not found!
+          </Trans>
+        </Alert>
       )}
-      {doctorData && (
+      {fetchResponse == "error" && (
+        <Alert severity="error">
+          <Trans i18nKey="prescriptionUnexpectedError">
+            Unexpected error. Try again later.
+          </Trans>
+        </Alert>
+      )}
+      <UploadInput
+        multiple={false}
+        onChange={onUploadPrescription}
+        containerStyle={{
+          display: "flex",
+          alignContent: "center",
+          justifyContent: "center",
+          width: "100%",
+          paddingTop: "2rem",
+        }}
+        label={prescriptionFile ? prescriptionFile.name : "Check prescription"}
+        inputProps={{
+          id: "prescriptionFile",
+          name: "prescriptionFile",
+          accept: ".pdf",
+        }}
+      />
+      {prescriptionData && (
         <Container maxWidth="sm" className={solidContainer}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Typography variant="body2">Doctor Name</Typography>
-              <Typography variant="body1">{doctorData.doctorName}</Typography>
+              <Typography variant="body1">
+                {prescriptionData.doctor.name}
+              </Typography>
             </Grid>
             <Grid item xs={6}>
               <Typography variant="body2">Doctor Document ID</Typography>
               <Typography variant="body1">
-                {doctorData.doctorDocumentId}
+                {prescriptionData.doctor.documentId}
               </Typography>
             </Grid>
           </Grid>
@@ -175,7 +196,7 @@ export default () => {
             <Grid item xs={12}>
               <Typography variant="body2">Doctor Blockchain ID</Typography>
               <Typography variant="body1">
-                {doctorData.doctorBlockchainId}
+                {prescriptionData.doctor.blockchainId}
               </Typography>
             </Grid>
           </Grid>
@@ -185,12 +206,14 @@ export default () => {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Typography variant="body2">Doctor E-mail</Typography>
-              <Typography variant="body1">{doctorData.doctorEmail}</Typography>
+              <Typography variant="body1">
+                {prescriptionData.doctor.email}
+              </Typography>
             </Grid>
             <Grid item xs={6}>
               <Typography variant="body2">Doctor Company ID</Typography>
               <Typography variant="body1">
-                {doctorData.doctorCompanyId}
+                {prescriptionData.doctor.companyId}
               </Typography>
             </Grid>
           </Grid>
@@ -200,12 +223,14 @@ export default () => {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Typography variant="body2">Patient Name</Typography>
-              <Typography variant="body1">{doctorData.patientName}</Typography>
+              <Typography variant="body1">
+                {prescriptionData.patient.name}
+              </Typography>
             </Grid>
             <Grid item xs={6}>
               <Typography variant="body2">Patient Document ID</Typography>
               <Typography variant="body1">
-                {doctorData.patientDocumentId}
+                {prescriptionData.patient.documentId}
               </Typography>
             </Grid>
           </Grid>
@@ -215,7 +240,9 @@ export default () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant="body2">Patient E-mail</Typography>
-              <Typography variant="body1">{doctorData.patientEmail}</Typography>
+              <Typography variant="body1">
+                {prescriptionData.patient.email}
+              </Typography>
             </Grid>
           </Grid>
 
@@ -224,11 +251,15 @@ export default () => {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Typography variant="body2">Max Uses</Typography>
-              <Typography variant="body1">{doctorData.maxUses}</Typography>
+              <Typography variant="body1">
+                {prescriptionData.prescription.maxUses}
+              </Typography>
             </Grid>
             <Grid item xs={6}>
               <Typography variant="body2">Uses Count</Typography>
-              <Typography variant="body1">{doctorData.usesCount}</Typography>
+              <Typography variant="body1">
+                {prescriptionData.usesCount}
+              </Typography>
             </Grid>
           </Grid>
 
@@ -238,35 +269,39 @@ export default () => {
             <Grid item xs={6}>
               <Typography variant="body2">Last Use At</Typography>
               <Typography variant="body1">
-                {getFormattedDate(doctorData.lastUseAt)}
+                {getFormattedDate(prescriptionData.prescription.lastUseAt)}
               </Typography>
             </Grid>
             <Grid item xs={6}>
               <Typography variant="body2">Created At</Typography>
               <Typography variant="body1">
-                {getFormattedDate(doctorData.createdAt)}
+                {getFormattedDate(prescriptionData.prescription.createdAt)}
               </Typography>
             </Grid>
           </Grid>
 
           <Divider light className={divider} />
 
-          {doctorData.invalidAt ||
-            (doctorData.expiredAt && (
+          {prescriptionData.invalidAt ||
+            (prescriptionData.expiredAt && (
               <Grid container spacing={2}>
-                {doctorData.invalidAt && (
+                {prescriptionData.invalidAt && (
                   <Grid item xs={6}>
                     <Typography variant="body2">Invalid At</Typography>
                     <Typography variant="body1">
-                      {getFormattedDate(doctorData.invalidAt)}
+                      {getFormattedDate(
+                        prescriptionData.prescription.invalidAt
+                      )}
                     </Typography>
                   </Grid>
                 )}
-                {doctorData.expiredAt && (
+                {prescriptionData.expiredAt && (
                   <Grid item xs={6}>
                     <Typography variant="body2">Expired At</Typography>
                     <Typography variant="body1">
-                      {getFormattedDate(doctorData.expiredAt)}
+                      {getFormattedDate(
+                        prescriptionData.prescription.expirationDate
+                      )}
                     </Typography>
                   </Grid>
                 )}
@@ -279,7 +314,7 @@ export default () => {
             className={button}
             onClick={() => setModalOpen(true)}
           >
-            Dispensa
+            Checkout
           </Button>
           {modalOpen && (
             <Dialog
