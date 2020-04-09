@@ -53,7 +53,7 @@ services:
     build: 
       context: ./pharmacy-client
       network: host
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.Build
     environment:
       PORT: ${REACT_APP_PHARMACY_CLIENT_PORT}
       APP_SERVER_PORT: ${PHARMACY_SERVER_PORT}

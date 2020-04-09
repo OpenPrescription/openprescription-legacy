@@ -12,7 +12,7 @@ RUN npm install concurrently -g --silent
 RUN npm install nodemon -g --silent
 
 COPY . .
-
+    
 COPY --chown=node:node . .
 
 USER node

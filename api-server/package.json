@@ -8,11 +8,11 @@
   "main": "./src/index.js",
   "scripts": {
     "clean": "rm -rf build && mkdir build",
-    "start": "node ./build/index.js",
+    "start": "react-scripts start",
     "dev": "nodemon --exec babel-node ./src/index.js",
     "test": "babel-node tests/index.js",
     "build-server": "babel src -d build",
-    "build": "npm run clean && npm run build-server"
+    "build": "react-scripts build"
   },
   "dependencies": {
     "@sendgrid/client": "^6.3.0",
