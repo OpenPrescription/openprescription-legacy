@@ -64,8 +64,8 @@ export default () => {
       const {
         data: { data },
       } = await fetchPrescriptionResume(hash);
-      data.isExpired = new Date(data.prescription.expirationDate) <= new Date();
-      data.noUseLeft = data.prescription.usesCount == data.prescription.maxUses;
+      data.isExpired = new Date() > new Date(data.prescription.expirationDate);
+      data.noUseLeft = data.prescription.usesCount >= data.prescription.maxUses;
       setPrescriptionData(data);
       setDispensable(!data.isExpired && !data.noUseLeft);
       setFetchResponse("success");
