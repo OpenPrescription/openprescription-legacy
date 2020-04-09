@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
     patientDocumentId: DataTypes.STRING,
     doctorCompanyId: DataTypes.STRING,
     hash: DataTypes.STRING,
-    companyId: DataTypes.STRING,
     certificateHash: DataTypes.STRING,
     maxUses: DataTypes.INTEGER,
     digitalSignature: DataTypes.TEXT,
@@ -20,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     disabledAt: DataTypes.DATE
   }, {});
   Prescription.associate = function(models) {
-    // associations can be defined here
+    Prescription.belongsTo(models.Doctor);
   };
   return Prescription;
 };

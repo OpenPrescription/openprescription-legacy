@@ -3,7 +3,6 @@ import multer from "multer";
 import { PrescriptionRepository, DoctorRepository } from "../repositories";
 
 const Router = express.Router();
-const upload = multer({ dest: "uploads/" });
 
 Router.post("/", async (req, res) => {
   try {
@@ -29,6 +28,16 @@ Router.post("/", async (req, res) => {
     return res.error(err);
   }
 });
+
+Router.get("/resume", async (req, res) => {
+  try {
+    const data =  await PrescriptionRepository.find.pharmacyResume(req.query.hash);
+    return res.success(data);
+  } catch (err) {
+    return res.error(err);
+  }
+});
+
 
 Router.get("/dispensing", (req, res) => {
   try {
