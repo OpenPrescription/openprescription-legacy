@@ -6,7 +6,7 @@ services:
       container_name: pharmacy-client
       build:
         context: .
-        dockerfile: ./Dockerfile
+        dockerfile: ./Dockerfile.dev
       ports:
         - '80:80'
       stdin_open: true
