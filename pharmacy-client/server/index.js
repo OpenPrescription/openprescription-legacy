@@ -6,12 +6,8 @@ const proxy = require("express-http-proxy");
 const app = express();
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("./build"));
+  app.use(express.static("../build"));
 }
-
-app.get("/", function (req, res) {
-  return res.send("OK");
-});
 
 app.use("/api/blockchainid", require("./routes/blockchainid"));
 

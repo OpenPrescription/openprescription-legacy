@@ -16,12 +16,9 @@ app.use(
 app.use(bodyParser.json({ limit: "50mb" }));
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("./build"));
+  app.use(express.static("../build"));
 }
 
-app.get("/", function (req, res) {
-  return res.send("OK");
-});
 app.use("/api/blockchainid", require("./routes/blockchainid"));
 
 app.use(
