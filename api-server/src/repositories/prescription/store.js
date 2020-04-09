@@ -1,4 +1,4 @@
-import { Prescription, sequelize } from "../../models";
+import { Prescription } from "../../models";
 import { PatientPrescriptionMail } from "../../mails";
 import { PDFHtml } from "../../tools/pdf-kit";
 import rp from "request-promise";
@@ -120,8 +120,11 @@ const create = async (doctor, prescriptionFile, data) => {
   console.log("CERTIFY PRESCRIPTION");
   const resPres = await certifyDocument(hash); // Certify prescription document in blockchain
   console.log("CERTIFY CERTIFICATE");
-  const resCert = await certifyDocument(buffer2sha256(certificate).toString()); // Certify prescription certificate in blockchain
+  const certificateHash = buffer2sha256(certificate).toString();
+  const resCert = await certifyDocument(certificateHash); // Certify prescription certificate in blockchain
   console.log(resPres, resCert);
+  prescription.certificateHash = certificateHash;
+  prescription.save();
   notifyCreaction(prescriptionFile, certificate, {
     patientName,
     patientEmail,

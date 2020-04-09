@@ -3,5 +3,6 @@
 	"prescription.pdf": "receita-medica.pdf",
 	"No": "Não",
 	"Yes": "Sim",
-	"prescription-certificate.pdf": "receita-certificado.pdf"
+	"prescription-certificate.pdf": "receita-certificado.pdf",
+	"Prescription not found": "Prescription not found"
 }
