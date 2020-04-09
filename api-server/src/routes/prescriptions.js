@@ -41,10 +41,19 @@ Router.get("/resume", async (req, res) => {
   }
 });
 
-Router.post("/dispensing", (req, res) => {
+Router.post("/dispensing", async (req, res) => {
   try {
     const ip = getIPFromRequest(req);
-    DrugDispensingRepository.store.create(req.body.documentId);
+    const { documentId, companyId } = req.body.pharmacist;
+    const prescriptionId = req.body.prescriptionId;
+    const purchaserDocumentId = req.body.purchaserDocumentId;
+    await DrugDispensingRepository.store.create(
+      documentId,
+      companyId,
+      prescriptionId,
+      purchaserDocumentId,
+      ip
+    );
     return res.success();
   } catch (err) {
     return res.error(err);

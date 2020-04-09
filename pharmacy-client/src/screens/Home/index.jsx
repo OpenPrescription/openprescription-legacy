@@ -91,7 +91,7 @@ export default () => {
         companyId: user.companyId,
       },
       purchaserDocumentId,
-      prescriptionId: prescriptionData.id,
+      prescriptionId: prescriptionData.prescription.id,
     };
     if (!purchaserDocumentId) {
       setPurchaserError(true);
@@ -100,6 +100,9 @@ export default () => {
     }
     try {
       await sendPrescriptionDispensing(data);
+      setModalOpen(false);
+      window.scrollTo(0, 0);
+      getPrecription(pathHash);
       setPrescriptionDispensingStatus("success");
     } catch (err) {
       setPrescriptionDispensingStatus("error");
@@ -195,29 +198,33 @@ export default () => {
         </Alert>
       )}
       {prescriptionDispensingStatus == "success" && (
-        <Alert severity="error">
-          <Trans i18nKey="prescriptiondispensedSuccess"></Trans>
+        <Alert severity="success">
+          <Trans i18nKey="prescriptionDispensedSuccess">
+            Prescription dispensed successfuly
+          </Trans>
         </Alert>
       )}
       <Container maxWidth="sm" style={{ paddingTop: 20 }}>
         <Typography variant="body2">
           Pharmacist Logged: {user.documentId}
         </Typography>
-      <UploadInput
-        multiple={false}
-        onChange={onUploadPrescription}
-        containerStyle={{
-          display: "flex",
-          width: "100%",
-          paddingTop: "2rem",
-        }}
-        label={prescriptionFile ? prescriptionFile.name : "Check prescription"}
-        inputProps={{
-          id: "prescriptionFile",
-          name: "prescriptionFile",
-          accept: ".pdf",
-        }}
-      />
+        <UploadInput
+          multiple={false}
+          onChange={onUploadPrescription}
+          containerStyle={{
+            display: "flex",
+            width: "100%",
+            paddingTop: "2rem",
+          }}
+          label={
+            prescriptionFile ? prescriptionFile.name : "Check prescription"
+          }
+          inputProps={{
+            id: "prescriptionFile",
+            name: "prescriptionFile",
+            accept: ".pdf",
+          }}
+        />
       </Container>
       {prescriptionData && (
         <Container maxWidth="sm" className={solidContainer}>
