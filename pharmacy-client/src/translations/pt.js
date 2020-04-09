@@ -8,5 +8,8 @@ export default {
   prescriptionUnexpectedError:
     "Ocorreu um erro insperado. Tente fazer a consulta mais tarde.",
   purchaserIdRequired: "Preencha o CPF do comprador",
-  neverUsed: "Nunca utilizada"
+  neverUsed: "Nunca utilizada",
+  checkPrescription: "Verificar Receita",
+  prescriptionIsExired: "Prescription is expired",
+  prescriptionNoUsesLeft: "A receita médica atingiu o numero maximo de usos"
 };

@@ -6,5 +6,8 @@ export default {
   prescriptionNotFoundError: "Prescription not found",
   prescriptionUnexpectedError: "Unexpected error. Try again later.",
   purchaserIdRequired: "Purchaser ID is required",
-  neverUsed: "Nerver used"
+  neverUsed: "Nerver used",
+  checkPrescription: "Check Prescription",
+  prescriptionIsExired: "Prescription is expired",
+  prescriptionNoUsesLeft: "The prescription reached the maximum number of uses"
 };

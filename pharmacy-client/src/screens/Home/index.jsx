@@ -33,6 +33,7 @@ export default () => {
   const [purchaserDocumentId, setPurchaserDocumentId] = useState("");
   const [fetchResponse, setFetchResponse] = useState(false);
   const [purchaserError, setPurchaserError] = useState(false);
+  const [isDispensable, setDispensable] = useState(false);
   const [
     prescriptionDispensingStatus,
     setPrescriptionDispensingStatus,
@@ -54,13 +55,7 @@ export default () => {
     setLoading(true);
     setPrescriptionFile(files[0]);
     const hash = await toSha256(files[0]);
-    //setHash(hash);
-    // try {
     history.push(`${hash}`);
-    // await getPrecription(hash.toString());
-    // } catch (e) {
-    //   console.error(e);
-    // }
     setLoading(false);
   };
 
@@ -69,7 +64,10 @@ export default () => {
       const {
         data: { data },
       } = await fetchPrescriptionResume(hash);
+      data.isExpired = new Date(data.prescription.expirationDate) <= new Date();
+      data.noUseLeft = data.prescription.usesCount == data.prescription.maxUses;
       setPrescriptionData(data);
+      setDispensable(!data.isExpired && !data.noUseLeft);
       setFetchResponse("success");
     } catch (err) {
       switch (err.response && err.response.status) {
@@ -105,6 +103,7 @@ export default () => {
       getPrecription(pathHash);
       setPrescriptionDispensingStatus("success");
     } catch (err) {
+      setModalOpen(false);
       setPrescriptionDispensingStatus("error");
     }
   };
@@ -155,6 +154,9 @@ export default () => {
       zIndex: theme.zIndex.drawer + 1,
       color: "#fff",
     },
+    alerts: {
+      marginBottom: theme.spacing(2),
+    },
   }));
 
   const {
@@ -166,6 +168,7 @@ export default () => {
     divider,
     modalContent,
     modalTitle,
+    alerts,
   } = useStyles();
 
   useEffect(() => {
@@ -176,35 +179,35 @@ export default () => {
 
   return (
     <section>
-      {fetchResponse == "404" && (
-        <Alert severity="error">
-          <Trans i18nKey="prescriptionNotFoundError">
-            Prescription not found!
-          </Trans>
-        </Alert>
-      )}
-      {fetchResponse == "error" && (
-        <Alert severity="error">
-          <Trans i18nKey="prescriptionUnexpectedError">
-            Unexpected error. Try again later.
-          </Trans>
-        </Alert>
-      )}
-      {prescriptionDispensingStatus == "error" && (
-        <Alert severity="error">
-          <Trans i18nKey="prescriptionDispensingUnexpectedError">
-            Unexpected error. Try again later.
-          </Trans>
-        </Alert>
-      )}
-      {prescriptionDispensingStatus == "success" && (
-        <Alert severity="success">
-          <Trans i18nKey="prescriptionDispensedSuccess">
-            Prescription dispensed successfuly
-          </Trans>
-        </Alert>
-      )}
       <Container maxWidth="sm" style={{ paddingTop: 20 }}>
+        {fetchResponse == "404" && (
+          <Alert severity="error" className={alerts}>
+            <Trans i18nKey="prescriptionNotFoundError">
+              Prescription not found!
+            </Trans>
+          </Alert>
+        )}
+        {fetchResponse == "error" && (
+          <Alert severity="error" className={alerts}>
+            <Trans i18nKey="prescriptionUnexpectedError">
+              Unexpected error. Try again later.
+            </Trans>
+          </Alert>
+        )}
+        {prescriptionDispensingStatus == "error" && (
+          <Alert severity="error" className={alerts}>
+            <Trans i18nKey="prescriptionDispensingUnexpectedError">
+              Unexpected error. Try again later.
+            </Trans>
+          </Alert>
+        )}
+        {prescriptionDispensingStatus == "success" && (
+          <Alert severity="success" className={alerts}>
+            <Trans i18nKey="prescriptionDispensedSuccess">
+              Prescription dispensed successfuly
+            </Trans>
+          </Alert>
+        )}
         <Typography variant="body2">
           Pharmacist Logged: {user.documentId}
         </Typography>
@@ -217,7 +220,7 @@ export default () => {
             paddingTop: "2rem",
           }}
           label={
-            prescriptionFile ? prescriptionFile.name : "Check prescription"
+            prescriptionFile ? prescriptionFile.name : t("checkPrescription")
           }
           inputProps={{
             id: "prescriptionFile",
@@ -228,6 +231,20 @@ export default () => {
       </Container>
       {prescriptionData && (
         <Container maxWidth="sm" className={solidContainer}>
+          {prescriptionData.isExpired && (
+            <Alert severity="warning" className={alerts}>
+              <Trans i18nKey="prescriptionIsExired">
+                Prescription is expired
+              </Trans>
+            </Alert>
+          )}
+          {prescriptionData.noUseLeft && (
+            <Alert severity="warning" className={alerts}>
+              <Trans i18nKey="prescriptionNoUsesLeft">
+                The prescription reached the maximum number of uses
+              </Trans>
+            </Alert>
+          )}
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Typography variant="body2">Doctor Name</Typography>
@@ -382,14 +399,16 @@ export default () => {
             </Grid>
           </Grid>
 
-          <Button
-            variant="contained"
-            color="secondary"
-            className={button}
-            onClick={() => setModalOpen(true)}
-          >
-            Dispense
-          </Button>
+          {isDispensable && (
+            <Button
+              variant="contained"
+              color="secondary"
+              className={button}
+              onClick={() => setModalOpen(true)}
+            >
+              Dispense
+            </Button>
+          )}
           {modalOpen && (
             <Dialog
               open={modalOpen}
