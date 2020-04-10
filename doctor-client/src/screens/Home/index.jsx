@@ -86,9 +86,14 @@ export default () => {
       width: 388,
       height: 355,
       position: 'fixed',
-      left: 0,
+      left: '50%',
+      transform: 'translateX(-190%)',
       bottom: 56,
       zIndex: 1,
+
+      ['@media (max-width: 1000px)']: {
+        display: 'none'
+      },
 
       ['@media (max-height: 840px)']: {
         display: 'none'
