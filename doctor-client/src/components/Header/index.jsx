@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    textTransform: 'uppercase'
   },
   menuItemBlock: {
     display: 'block',

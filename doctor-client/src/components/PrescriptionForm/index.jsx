@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
       width: 350,
     },
   },
+
 }));
 
 export default ({ onSubmit }) => {
@@ -57,7 +58,7 @@ export default ({ onSubmit }) => {
   return (
     <form noValidate onSubmit={handleSubmit(handleFormSubmit)}>
       <div className={classes.formContent}>
-        <FormControl className={classes.formControl}>
+        {/* <FormControl className={classes.formControl}>
           <Typography
             variant="body2"
             component="p"
@@ -90,7 +91,7 @@ export default ({ onSubmit }) => {
               </Trans>
             </FormHelperText>
           )}
-        </FormControl>
+        </FormControl> */}
         <FormControl className={classes.formControl}>
           <TextField
             required
@@ -175,7 +176,7 @@ export default ({ onSubmit }) => {
           )}
         </FormControl>
         <FormControl className={classes.formControl}>
-          <Typography variant="body2" component="p">
+          <Typography component="p">
             <Trans i18nKey="expirationDateLabel">
               Prescription expiration date
             </Trans>
@@ -187,7 +188,7 @@ export default ({ onSubmit }) => {
             minDate={new Date()}
           />
         </FormControl>
-        <FormControl component="fieldset" className={classes.formControl}>
+        <FormControl component="fieldset" className={classes.formControl} style={{marginTop: '45px'}}>
           <FormControlLabel
             control={
               <Checkbox
@@ -204,14 +205,14 @@ export default ({ onSubmit }) => {
             }
             label={t("privatePrescriptionLabel")}
           />
-          <FormHelperText>
+          <FormHelperText style={{fontSize: '11px'}}>
             <Trans i18nKey="privateCheckboxHelper">
               If checked only patient can use this prescription to buy medicines
             </Trans>
           </FormHelperText>
         </FormControl>
         <FormControl component="fieldset" className={classes.formControl}>
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" color="primary" style={{ width: '350px'}}>
             <Trans i18nKey="submitButtonLabel">Submit</Trans>
           </Button>
         </FormControl>

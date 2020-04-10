@@ -118,10 +118,8 @@ export default () => {
             </Trans>
           </Alert>
         )}
-        <Typography variant="h4" component="h2">
-          <Trans i18nKey="helloDoctor">Hello, Doctor</Trans>
-        </Typography>
-        <Typography variant="body2" component="p">
+
+        <Typography variant="subtitle1" component="p">
           <Trans i18nKey="fillToCreateNewPrescription">
             Fill fields bellow to create a new medical prescription:
           </Trans>
