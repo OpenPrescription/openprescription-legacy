@@ -6,11 +6,8 @@ import { Typography } from "@material-ui/core";
 import BlockchainIdAuth from "../BlockchainIdAuth";
 import { makeStyles } from "@material-ui/core/styles";
 
-import shippingPackage from './../../assets/shipping-package.svg';
-
-export default ({ prescription, onSigned }) => {
+export default ({ prescription, onSigned, doneAuth = false }) => {
   const [active, setActive] = useState(true);
-  const [doneAuth, setDoneAuth] = useState(false);
   const blockchainIdInfos = [
     "name",
     "email",
@@ -35,8 +32,6 @@ export default ({ prescription, onSigned }) => {
     },
   }));
 
-  const { prescriptionTitle } = useStyles();
-
   return (
     <>
       {!doneAuth && (
@@ -60,20 +55,6 @@ export default ({ prescription, onSigned }) => {
             doctorId={getDoctorId()}
             prescriptionHash={prescription.hash}
           />
-        </div>
-      )}
-      {doneAuth && (
-        <div style={{ position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', maxWidth: '90%' }}>
-          <Typography
-            variant="body2"
-            component="p"
-            className={prescriptionTitle}
-          >
-            <Trans i18nKey="prescriptionSent">
-              Thank you, your prescription was sent!
-            </Trans>
-          </Typography>
-          <img src={shippingPackage} />
         </div>
       )}
     </>

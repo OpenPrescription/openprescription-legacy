@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { Trans, useTranslation } from "react-i18next";
@@ -16,6 +16,7 @@ import moment from "moment";
 import { useUser } from "../../contexts/User";
 import { toSha256, toBase64 } from "../../helpers";
 import sha256 from "js-sha256";
+import shippingPackage from "./../../assets/shipping-package.svg";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -29,6 +30,13 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
   },
+  prescriptionTitle: {
+    fontSize: 20,
+    color: "#00767A",
+    fontWeight: 900,
+    textAlign: "center",
+    marginBottom: 40,
+  },
 }));
 
 export default () => {
@@ -40,7 +48,7 @@ export default () => {
   const [prescription, setPrescription] = useState(false);
   const [prescriptionFile, setPrescriptionFile] = useState(false);
   const [validationError, setValidationError] = useState(null);
-  const [creationResponse, setCreationResponse] = useState(false);
+  const [creationResponse, setCreationResponse] = useState("");
   const [uploadForm, setUploadForm] = useState(false);
   const user = useUser();
   const history = useHistory();
@@ -113,12 +121,17 @@ export default () => {
     setLoading(true);
     setPrescriptionFile(files[0]);
     const hash = await toSha256(files[0]);
+    setPrescription({
+      ...prescription,
+      hash,
+      prescriptionFile: files,
+    });
     setLoading(false);
   };
 
   const onClickPrescription = () => {
     handleSignProcess(true);
-  }
+  };
 
   return (
     <div className={classes.heroContent}>
@@ -130,31 +143,52 @@ export default () => {
                 <CircularProgress color="inherit" />
               </Backdrop>
             )}
-              {creationResponse == "success" && (
-                <Alert severity="success">
-                  <Trans i18nKey="prescriptionSuccessMessage">
-                    Prescription created with success. A e-mail was sent to patient
-                    with prescription document.
+            {creationResponse === "success" && (
+              <div
+                style={{
+                  position: "fixed",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  textAlign: "center",
+                  maxWidth: "90%",
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  component="p"
+                  className={classes.prescriptionTitle}
+                >
+                  <Trans i18nKey="prescriptionSent">
+                    Thank you, your prescription was sent!
                   </Trans>
-                </Alert>
-              )}
-              {creationResponse == "error" && (
-                <Alert severity="error">
-                  <Trans i18nKey="prescriptionUnkownErrorMessage">
-                    Could not create prescription. Please, try later.
-                  </Trans>
-                </Alert>
-              )}
-              {Boolean(validationError) && (
-                <Alert severity="error">{validationError}</Alert>
-              )}
-              <PrescriptionForm file={prescriptionFile} onClickPrescription={onClickPrescription} onSubmit={onSubmitPrescription} uploadForm={uploadForm} onUploadPrescription={onUploadPrescription} />
-              <DoctorIdRegisterDialog
-                open={openDoctorIdRequest}
-                onCancel={() => toggleDoctorIdRequest(false)}
-                onValidate={onValidateDoctorId}
-              />
-            </>
+                </Typography>
+                <img src={shippingPackage} />
+              </div>
+            )}
+            {creationResponse == "error" && (
+              <Alert severity="error">
+                <Trans i18nKey="prescriptionUnkownErrorMessage">
+                  Could not create prescription. Please, try later.
+                </Trans>
+              </Alert>
+            )}
+            {Boolean(validationError) && (
+              <Alert severity="error">{validationError}</Alert>
+            )}
+            {creationResponse === "" && (<PrescriptionForm
+              file={prescriptionFile}
+              onClickPrescription={onClickPrescription}
+              onSubmit={onSubmitPrescription}
+              uploadForm={uploadForm}
+              onUploadPrescription={onUploadPrescription}
+            />)}
+            <DoctorIdRegisterDialog
+              open={openDoctorIdRequest}
+              onCancel={() => toggleDoctorIdRequest(false)}
+              onValidate={onValidateDoctorId}
+            />
+          </>
         )}
         {startSignProcess && (
           <SignPrescription
