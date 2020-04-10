@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const proxy = require("express-http-proxy");
 const bodyParser = require("body-parser");
+const path = require("path");
 
 const app = express();
 
@@ -15,9 +16,7 @@ app.use(
 );
 app.use(bodyParser.json({ limit: "50mb" }));
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("../build"));
-}
+app.use(express.static(path.resolve(__dirname, "../build")));
 
 app.use("/api/blockchainid", require("./routes/blockchainid"));
 
@@ -72,6 +71,12 @@ app.use(
   })
 );
 
-app.listen(process.env.APP_SERVER_PORT, function () {
-  console.log(`Express server running on ${process.env.APP_SERVER_PORT}`);
+app.get("*", function (req, res) {
+  res.sendFile(path.resolve(__dirname, "../build", "index.html"));
+});
+
+const port = process.env.APP_SERVER_PORT || process.env.PORT || 1337;
+
+app.listen(port, function () {
+  console.log(`Express server running on ${port}`);
 });

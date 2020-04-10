@@ -12,6 +12,7 @@ import SignPrescription from "../../components/SignPrescription";
 import PrescriptionForm from "../../components/PrescriptionForm";
 import { createPrescription } from "../../data/prescriptions";
 import moment from "moment";
+import sha256 from "js-sha256";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -57,9 +58,19 @@ export default () => {
       reader.onerror = (error) => reject(error);
     });
 
+  const toSha256 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsOriginalMy(file);
+      reader.onload = (e) =>
+        resolve(sha256.create().update(e.target.result).hex());
+      reader.onerror = (error) => reject(error);
+    });
+
   const sendPrescription = async (data) => {
     try {
       data.prescriptionFile = await toBase64(data.prescriptionFile[0]);
+      data.hash = await toSha256(data.prescriptionFile[0]);
       await createPrescription(data);
       window.scrollTo(0, 0);
       setCreationResponse("success");

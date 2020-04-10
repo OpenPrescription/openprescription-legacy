@@ -11,7 +11,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import { useForm } from "react-hook-form";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import sha256 from "crypto-js/sha256";
+import sha256 from "js-sha256";
 
 const useStyles = makeStyles((theme) => ({
   formContent: {
@@ -44,13 +44,16 @@ export default ({ onSubmit }) => {
 
   const onUploadPrescription = (files) => {
     setPrescriptionFile(files[0]);
+    console.log(files[0]);
     try {
       const reader = new FileReader();
-      reader.onload = function () {
-        const hash = sha256(reader.getAsOriginalMyString());
+      reader.onloadend = function (e) {
+        const hash = sha256.create()
+          .update(e.target.result)
+          .hex();
         setHash(hash.toString());
       };
-      reader.readAsOriginalMy(files[0]);
+      reader.readAsArrayBuffer(files[0]);
     } catch (err) {
       console.log(err);
     }

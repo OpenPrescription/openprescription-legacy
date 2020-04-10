@@ -11,7 +11,7 @@
     "start": "node ./build/index.js",
     "dev": "nodemon --exec babel-node ./src/index.js",
     "test": "babel-node tests/index.js",
-    "build-server": "babel src -d build",
+    "build-server": "babel src -d build && cp -r src/views/ build/",
     "build": "npm run clean && npm run build-server"
   },
   "dependencies": {

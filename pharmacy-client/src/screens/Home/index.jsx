@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import sha256 from "crypto-js/sha256";
+import sha256 from "js-sha256";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Typography from "@material-ui/core/Typography";
@@ -47,7 +47,7 @@ export default () => {
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsOriginalMy(file);
-      reader.onload = () => resolve(sha256(reader.getAsOriginalMyString()));
+      reader.onload = (e) => resolve(sha256(e.target.result));
       reader.onerror = (error) => reject(error);
     });
 
@@ -55,7 +55,7 @@ export default () => {
     setLoading(true);
     setPrescriptionFile(files[0]);
     const hash = await toSha256(files[0]);
-    history.push(`${hash}`);
+    history.push(`/${hash}`);
     setLoading(false);
   };
 
@@ -64,7 +64,7 @@ export default () => {
       const {
         data: { data },
       } = await fetchPrescriptionResume(hash);
-      data.isExpired = new Date() > new Date(data.prescription.expirationDate);
+      data.isExpired = new Date() < new Date(data.prescription.expirationDate);
       data.noUseLeft = data.prescription.usesCount >= data.prescription.maxUses;
       setPrescriptionData(data);
       setDispensable(!data.isExpired && !data.noUseLeft);
