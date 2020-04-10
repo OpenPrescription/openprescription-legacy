@@ -71,7 +71,7 @@ export default ({ onSubmit, uploadForm, onUploadPrescription, file, onClickPresc
                   className={classes.prescriptionTitle}
                 >
                   <Trans i18nKey="sendPrescriptionFileLabel">
-                    Send the prescription in PDF file
+                  Submit the prescription in PDF file
                   </Trans>
                 </Typography>
                 <UploadInput
@@ -108,6 +108,7 @@ export default ({ onSubmit, uploadForm, onUploadPrescription, file, onClickPresc
                     SUBMIT AND VALIDATE MY IDENTITY
                   </Trans>
                 </Button>
+                <div>{hash}</div>
               </div>
             )}
             <div>{hash}</div>
@@ -124,7 +125,7 @@ export default ({ onSubmit, uploadForm, onUploadPrescription, file, onClickPresc
           <>
             <Typography variant="subtitle1" component="p" style={{ marginBottom: 30 }}>
               <Trans i18nKey="fillToCreateNewPrescription">
-                Fill fields bellow to create a new medical prescription:
+              Fill the fields below to register a new medical prescription
               </Trans>
             </Typography>
             <FormControl className={classes.formControl}>
@@ -242,13 +243,13 @@ export default ({ onSubmit, uploadForm, onUploadPrescription, file, onClickPresc
               />
               <FormHelperText style={{fontSize: '11px'}}>
                 <Trans i18nKey="privateCheckboxHelper">
-                  If checked only patient can use this prescription to buy medicines
+                If checked, nobody can buy the medicines in behalf of the patient
                 </Trans>
               </FormHelperText>
             </FormControl>
             <FormControl component="fieldset" className={classes.formControl}>
               <Button type="submit" variant="contained" color="primary" style={{ width: '350px'}}>
-                <Trans i18nKey="submitButtonLabel">Submit</Trans>
+                <Trans i18nKey="submitButtonLabel">Next</Trans>
               </Button>
             </FormControl>
           </>
