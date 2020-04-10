@@ -33,5 +33,8 @@ export default {
   companyId: "Company ID",
   homeScreenTitle: 'Send your medical prescriptions remotely.',
   homeScreenText: 'Now your patient doesn’t need to leave home to get a prescription. Your identity securely authenticated by blockchain.',
-  homeScreenButton: 'Start prescription'
+  homeScreenButton: 'Start prescription',
+  prescriptionSent: 'Thank you, your prescription was sent!',
+  prescriptionUploaded: 'Prescription Uploaded',
+  validateIdentity: 'SUBMIT AND VALIDATE MY IDENTITY'
 };

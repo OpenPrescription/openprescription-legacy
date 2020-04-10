@@ -33,5 +33,8 @@ export default {
   companyId: "CNPJ",
   homeScreenTitle: 'Envie suas prescrições médicas remotamente.',
   homeScreenText: 'Agora, seu paciente não precisa sair de casa para obter uma receita. Sua identidade autenticada com segurança pela blockchain.',
-  homeScreenButton: 'Iniciar prescrição'
+  homeScreenButton: 'Iniciar prescrição',
+  prescriptionSent: 'Obrigado, sua prescrição foi enviada!',
+  prescriptionUploaded: 'Prescrição enviada',
+  validateIdentity: 'Enviar e validar minha identidade'
 };

@@ -96,10 +96,14 @@ export default ({ onSubmit, uploadForm, onUploadPrescription, file, onClickPresc
                   component="p"
                   className={classes.prescriptionTitle}
                 >
-                  Prescription uploaded!
+                  <Trans i18nKey="prescriptionUploaded">
+                    Prescription uploaded!
+                  </Trans>
                 </Typography>
                 <Button type="submit" variant="contained" color="primary" style={{ width: '350px'}} onClick={onClickPrescription}>
-                  SUBMIT AND VALIDATE MY IDENTITY
+                  <Trans i18nKey="validateIdentity">
+                    SUBMIT AND VALIDATE MY IDENTITY
+                  </Trans>
                 </Button>
               </div>
             )}
