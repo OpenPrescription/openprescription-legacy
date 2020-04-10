@@ -31,4 +31,7 @@ export default {
     "Não foi possível cadastrar a receita. Tente novamente mais tarde.",
   companyName: "Nome da empresa",
   companyId: "CNPJ",
+  homeScreenTitle: 'Envie suas prescrições médicas remotamente.',
+  homeScreenText: 'Agora, seu paciente não precisa sair de casa para obter uma receita. Sua identidade autenticada com segurança pela blockchain.',
+  homeScreenButton: 'Iniciar prescrição'
 };

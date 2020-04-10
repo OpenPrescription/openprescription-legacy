@@ -31,4 +31,7 @@ export default {
     "Could not create prescription. Please, try later.",
   companyName: "Company Name",
   companyId: "Company ID",
+  homeScreenTitle: 'Send your medical prescriptions remotely.',
+  homeScreenText: 'Now your patient doesn’t need to leave home to get a prescription. Your identity securely authenticated by blockchain.',
+  homeScreenButton: 'Start prescription'
 };
