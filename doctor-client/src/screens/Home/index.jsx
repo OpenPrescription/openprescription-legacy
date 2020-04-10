@@ -12,7 +12,8 @@ import SignPrescription from "../../components/SignPrescription";
 import PrescriptionForm from "../../components/PrescriptionForm";
 import { createPrescription } from "../../data/prescriptions";
 import moment from "moment";
-import sha256 from "js-sha256";
+import { useUser } from "../../contexts/User";
+import { toSha256, toBase64 } from "../../helpers";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -37,6 +38,7 @@ export default () => {
   const [prescription, setPrescription] = useState(false);
   const [validationError, setValidationError] = useState(null);
   const [creationResponse, setCreationResponse] = useState(false);
+  const user = useUser();
 
   const onValidateDoctorId = (isValid, doctorId) => {
     if (isValid) {
@@ -50,27 +52,14 @@ export default () => {
     }
   };
 
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-
-  const toSha256 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsOriginalMy(file);
-      reader.onload = (e) => resolve(sha256(e.target.result));
-      reader.onerror = (error) => reject(error);
-    });
-
   const sendPrescription = async (data) => {
     try {
       const base64File = await toBase64(data.prescriptionFile[0]);
-      data.hash = await toSha256(data.prescriptionFile[0]);
       data.prescriptionFile = base64File;
+      data.company = {
+        id: user.companyId,
+        name: user.companyName,
+      };
       await createPrescription(data);
       window.scrollTo(0, 0);
       setCreationResponse("success");
@@ -98,7 +87,6 @@ export default () => {
   const onSubmitPrescription = async (data) => {
     const doctorId = getDoctorId();
     data.doctorId = doctorId;
-    data.hash = await toSha256(data.prescriptionFile[0]);
     setPrescription(data);
     if (!doctorId) {
       return toggleDoctorIdRequest(true);

@@ -29,4 +29,6 @@ export default {
     "Prescription created with success. A e-mail was sent to patient with prescription document.",
   prescriptionUnkownErrorMessage:
     "Could not create prescription. Please, try later.",
+  companyName: "Company Name",
+  companyId: "Company ID",
 };

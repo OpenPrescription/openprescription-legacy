@@ -1,22 +1,20 @@
-import React, { useState } from "react";
-import FullPageSpinner from "../../components/FullPageSpinner";
-const AuthContext = React.createContext();
+import React, { createContext } from "react";
+import { USER_STORAGE_KEY } from "../../constants";
+import { useStateWithLocalStorage } from "../../helpers";
+
+const AuthContext = createContext();
 
 function AuthProvider(props) {
-  const [data, setData] = useState({
-    user: true
-  });
+  const [user, setUser] = useStateWithLocalStorage(USER_STORAGE_KEY);
 
-  if (false) {
-    return <FullPageSpinner />;
-  }
-  const login = loginData => {}; // make a login request
-  const register = userData => {}; // register the user
-  const logout = () => {}; // clear the token in localStorage and the user data
+  const login = (data) => setUser(data); // make a login request
+
+  const register = (userData) => {}; // register the user
+  const logout = () => setUser(null); // clear the token in localStorage and the user data
 
   return (
     <AuthContext.Provider
-      value={{ data, login, logout, register }}
+      value={{ data: { user }, login, logout, register }}
       {...props}
     />
   );

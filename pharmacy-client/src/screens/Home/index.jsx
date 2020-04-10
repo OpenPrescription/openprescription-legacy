@@ -64,7 +64,7 @@ export default () => {
       const {
         data: { data },
       } = await fetchPrescriptionResume(hash);
-      data.isExpired = new Date() < new Date(data.prescription.expirationDate);
+      data.isExpired = new Date() > new Date(data.prescription.expirationDate);
       data.noUseLeft = data.prescription.usesCount >= data.prescription.maxUses;
       setPrescriptionData(data);
       setDispensable(!data.isExpired && !data.noUseLeft);
@@ -271,17 +271,6 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="body2">{t("doctorBlockchainId")}</Typography>
-              <Typography variant="body1">
-                {prescriptionData.doctor.blockchainid}
-              </Typography>
-            </Grid>
-          </Grid>
-
-          <Divider light className={divider} />
-
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
               <Typography variant="body2">{t("doctorEmail")}</Typography>
               <Typography variant="body1">
                 {prescriptionData.doctor.email}
@@ -360,31 +349,33 @@ export default () => {
 
           <Divider light className={divider} />
 
-          {prescriptionData.invalidAt ||
-            (prescriptionData.expiredAt && (
-              <Grid container spacing={2}>
-                {prescriptionData.invalidAt && (
-                  <Grid item xs={6}>
-                    <Typography variant="body2">{t("invalidAt")}</Typography>
-                    <Typography variant="body1">
-                      {getFormattedDate(
-                        prescriptionData.prescription.invalidAt
-                      )}
-                    </Typography>
-                  </Grid>
-                )}
-                {prescriptionData.expiredAt && (
-                  <Grid item xs={6}>
-                    <Typography variant="body2">{t("expiredAt")}</Typography>
-                    <Typography variant="body1">
-                      {getFormattedDate(
-                        prescriptionData.prescription.expirationDate
-                      )}
-                    </Typography>
-                  </Grid>
-                )}
-              </Grid>
-            ))}
+          <Grid container spacing={2}>
+            {prescriptionData.prescription.invalidAt && (<Grid item xs={6}>
+              <Typography variant="body2">{t("invalidAt")}</Typography>
+              <Typography variant="body1">
+                {getFormattedDate(prescriptionData.prescription.invalidAt)}
+              </Typography>
+            </Grid>)}
+            <Grid item xs={6}>
+              <Typography variant="body2">{t("expiredAt")}</Typography>
+              <Typography variant="body1">
+                {getFormattedDate(prescriptionData.prescription.expirationDate)}
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Divider light className={divider} />
+
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="body2">{t("doctorBlockchainId")}</Typography>
+              <Typography variant="body1">
+                {prescriptionData.doctor.blockchainid}
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Divider light className={divider} />
 
           <Grid container spacing={2}>
             <Grid item xs={12}>

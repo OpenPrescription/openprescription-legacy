@@ -78,7 +78,7 @@ export default ({
   useEffect(() => {
     if (!qrcode) getQRCode();
     setAuthIntervalStatus(active);
-  },[]);
+  }, [ qrcode ]);
 
   return (
     <div>

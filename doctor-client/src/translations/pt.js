@@ -29,4 +29,6 @@ export default {
     "Receita criada com sucesso. Uma cópia foi enviado para o paciente por e-mail.",
   prescriptionUnkownErrorMessage:
     "Não foi possível cadastrar a receita. Tente novamente mais tarde.",
+  companyName: "Nome da empresa",
+  companyId: "CNPJ",
 };

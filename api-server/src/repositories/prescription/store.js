@@ -82,7 +82,7 @@ const create = async (doctor, prescriptionFile, data) => {
   const {
     patientName,
     patientEmail,
-    doctorCompanyId,
+    company,
     hash,
     maxUses,
     digitalSignature,
@@ -95,7 +95,7 @@ const create = async (doctor, prescriptionFile, data) => {
     patientName,
     patientDocumentId: data.patientId,
     patientEmail,
-    doctorCompanyId,
+    doctorCompanyId: company.id,
     hash,
     maxUses,
     private: data.isPrivate,

@@ -11,7 +11,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import { useForm } from "react-hook-form";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import sha256 from "js-sha256";
+import { toSha256 } from "../../helpers";
 
 const useStyles = makeStyles((theme) => ({
   formContent: {
@@ -42,10 +42,15 @@ export default ({ onSubmit }) => {
   const [prescriptionFile, setPrescriptionFile] = useState(null);
   const [hash, setHash] = useState(null);
 
-  const onUploadPrescription = (files) => {};
+  const onUploadPrescription = async (files) => {
+    setPrescriptionFile(files[0]);
+    const fileCheckSum = await toSha256(files[0]);
+    setHash(fileCheckSum);
+  };
 
   const handleFormSubmit = (data) => {
     data.expirationDate = selectExpiredDate;
+    data.hash = hash;
     if (typeof onSubmit === "function") onSubmit(data);
   };
 
@@ -77,6 +82,7 @@ export default ({ onSubmit }) => {
               ref: register({ required: true }),
             }}
           />
+          <div>{hash}</div>
           {errors.prescriptionFile && (
             <FormHelperText error={Boolean(errors.prescriptionFile)}>
               <Trans i18nKey="patientPrescriptionFieldRequiredError">
@@ -148,29 +154,6 @@ export default ({ onSubmit }) => {
               </Trans>
             </FormHelperText>
           )}
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <TextField
-            required
-            id="doctorCompanyId"
-            name="doctorCompanyId"
-            label={t("doctorCompanyIDLabel")}
-            autoComplete="dccompanyid"
-            inputRef={register({ required: true })}
-            error={Boolean(errors.doctorCompanyId)}
-          />
-          {errors.patientId && (
-            <FormHelperText error={true}>
-              <Trans i18nKey="doctorCompanyFieldRequiredError">
-                Doctor Company ID is required
-              </Trans>
-            </FormHelperText>
-          )}
-          <FormHelperText>
-            <Trans i18nKey="doctorCompanyIDHelper">
-              Doctor Company ID is required
-            </Trans>
-          </FormHelperText>
         </FormControl>
         <FormControl className={classes.formControl}>
           <TextField

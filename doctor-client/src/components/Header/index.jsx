@@ -10,6 +10,8 @@ import MenuItem from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../contexts/Auth";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -33,6 +35,7 @@ export default () => {
   const { i18n } = useTranslation();
   const [language, setLanguage] = useState(i18n.language);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const { logout } = useAuth();
 
   const handleSelectLanguage = (event, lang) => {
     if (!lang) return setAnchorEl(event.currentTarget);
@@ -43,6 +46,10 @@ export default () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -67,6 +74,14 @@ export default () => {
           >
             {language}
             <KeyboardArrowDownIcon />
+          </Button>
+          <Button
+            color="inherit"
+            aria-controls="language-menu"
+            aria-haspopup="true"
+            onClick={handleLogout}
+          >
+            <ExitToAppIcon/>
           </Button>
         </Toolbar>
         <Menu
