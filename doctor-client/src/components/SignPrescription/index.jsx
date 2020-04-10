@@ -38,24 +38,29 @@ export default ({ prescription, onSigned }) => {
   const { prescriptionTitle } = useStyles();
 
   return (
-    <div>
+    <>
       {!doneAuth && (
-        <>
-          <Trans i18nKey="signPrescriptionTitle">Sign prescription</Trans>
+        <div>
+          <Typography variant="subtitle1" component="p" style={{ textAlign: 'center'}}>
+            <Trans i18nKey="signPrescriptionTitle">Submission done successfully!</Trans>
+          </Typography>
+          <Typography component="p" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '30px', marginBottom: '60px'}}>
             <Trans i18nKey="signPrescriptionDescription">
-              Scan QR Code with your Blockchain ID to sign and submit the
-              prescription:
+              Now open your OriginalMy app and scan this QR Code to validate your identity.
             </Trans>
-          <Typography variant="body1">Doctor ID {getDoctorId()}</Typography>
+          </Typography>
+
+
           <BlockchainIdAuth
             active={active}
             infos={blockchainIdInfos}
             onAuthentication={(user) => {
-              setDoneAuth(true);
               onSigned(user);
             }}
+            doctorId={getDoctorId()}
+            prescriptionHash={prescription.hash}
           />
-        </>
+        </div>
       )}
       {doneAuth && (
         <div style={{ position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', maxWidth: '90%' }}>
@@ -71,6 +76,6 @@ export default ({ prescription, onSigned }) => {
           <img src={shippingPackage} />
         </div>
       )}
-    </div>
+    </>
   );
 };
