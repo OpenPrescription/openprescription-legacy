@@ -11,7 +11,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import { useForm } from "react-hook-form";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { toSha256 } from "../../helpers";
+
 
 const useStyles = makeStyles((theme) => ({
   formContent: {
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default ({ onSubmit }) => {
+export default ({ onSubmit, uploadForm, onUploadPrescription, file, onClickPrescription }) => {
   const { t } = useTranslation();
   const classes = useStyles();
   const { register, handleSubmit, watch, errors } = useForm();
@@ -42,12 +42,6 @@ export default ({ onSubmit }) => {
   const [privatePrescription, handlePrivateChange] = useState(false);
   const [prescriptionFile, setPrescriptionFile] = useState(null);
   const [hash, setHash] = useState(null);
-
-  const onUploadPrescription = async (files) => {
-    setPrescriptionFile(files[0]);
-    const fileCheckSum = await toSha256(files[0]);
-    setHash(fileCheckSum);
-  };
 
   const handleFormSubmit = (data) => {
     data.expirationDate = selectExpiredDate;
@@ -58,164 +52,188 @@ export default ({ onSubmit }) => {
   return (
     <form noValidate onSubmit={handleSubmit(handleFormSubmit)}>
       <div className={classes.formContent}>
-        {/* <FormControl className={classes.formControl}>
-          <Typography
-            variant="body2"
-            component="p"
-            className={classes.prescriptionLabel}
-          >
-            <Trans i18nKey="sendPrescriptionFileLabel">
-              Send the prescription in PDF file
-            </Trans>
-          </Typography>
-          <UploadInput
-            multiple={false}
-            onChange={onUploadPrescription}
-            label={
-              !prescriptionFile
-                ? t("uploadPrescription")
-                : prescriptionFile.name
-            }
-            inputProps={{
-              id: "prescriptionFile",
-              name: "prescriptionFile",
-              accept: ".pdf",
-              ref: register({ required: true }),
-            }}
-          />
-          <div>{hash}</div>
-          {errors.prescriptionFile && (
-            <FormHelperText error={Boolean(errors.prescriptionFile)}>
-              <Trans i18nKey="patientPrescriptionFieldRequiredError">
-                Prescription file is required
-              </Trans>
-            </FormHelperText>
-          )}
-        </FormControl> */}
-        <FormControl className={classes.formControl}>
-          <TextField
-            required
-            id="patientName"
-            name="patientName"
-            label={t("patientNameLabel")}
-            autoComplete="pname"
-            inputRef={register({ required: true })}
-            error={Boolean(errors.patientName)}
-          />
-          {errors.patientName && (
-            <FormHelperText error={true}>
-              <Trans i18nKey="patientNameFieldRequiredError">
-                Patient name is required
-              </Trans>
-            </FormHelperText>
-          )}
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <TextField
-            required
-            id="patientEmail"
-            name="patientEmail"
-            label={t("patientEmailLabel")}
-            autoComplete="pemail"
-            inputRef={register({
-              required: true,
-              pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            })}
-            error={Boolean(errors.patientEmail)}
-          />
-          {errors.patientEmail && errors.patientEmail.type === "required" && (
-            <FormHelperText error={true}>
-              <Trans i18nKey="patientEmailFieldRequiredError">
-                Patient e-mail is required
-              </Trans>
-            </FormHelperText>
-          )}
-          {errors.patientEmail && errors.patientEmail.type === "pattern" && (
-            <FormHelperText error={true}>
-              <Trans i18nKey="patientEmailFieldInvalidError">
-                Patient e-mail is invalid
-              </Trans>
-            </FormHelperText>
-          )}
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <TextField
-            required
-            id="patientId"
-            name="patientId"
-            label={t("patientIDLabel")}
-            autoComplete="pdocumentid"
-            inputRef={register({ required: true })}
-            error={Boolean(errors.patientId)}
-          />
-          {errors.patientId && (
-            <FormHelperText error={true}>
-              <Trans i18nKey="patientDocumentIdFieldRequiredError">
-                Patient document ID is required
-              </Trans>
-            </FormHelperText>
-          )}
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <TextField
-            required
-            id="maxUses"
-            name="maxUses"
-            label={t("maxUsesLabel")}
-            autoComplete="pdocumentid"
-            type="number"
-            defaultValue={1}
-            inputProps={{ min: 1 }}
-            inputRef={register({ required: true })}
-            error={Boolean(errors.maxUses)}
-          />
-          {errors.maxUses && (
-            <FormHelperText error={true}>
-              <Trans>Max uses is required</Trans>
-            </FormHelperText>
-          )}
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <Typography component="p">
-            <Trans i18nKey="expirationDateLabel">
-              Prescription expiration date
-            </Trans>
-          </Typography>
-          <DatePicker
-            value={selectExpiredDate}
-            onChange={handleExpiredDateChange}
-            format="DD/MM/YYYY"
-            minDate={new Date()}
-          />
-        </FormControl>
-        <FormControl component="fieldset" className={classes.formControl} style={{marginTop: '45px'}}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={privatePrescription}
-                onChange={(event) =>
-                  handlePrivateChange(event.currentTarget.checked)
-                }
-                name="isPrivate"
-                color="primary"
-                inputProps={{
-                  ref: register,
-                }}
+        {uploadForm && (
+          <FormControl className={classes.formControl}>
+            {!file && (
+              <>
+                <Typography
+                  variant="body2"
+                  component="p"
+                  className={classes.prescriptionLabel}
+                >
+                  <Trans i18nKey="sendPrescriptionFileLabel">
+                    Send the prescription in PDF file
+                  </Trans>
+                </Typography>
+                <UploadInput
+                  multiple={false}
+                  onChange={onUploadPrescription}
+                  label={
+                    !prescriptionFile
+                      ? t("uploadPrescription")
+                      : prescriptionFile.name
+                  }
+                  inputProps={{
+                    id: "prescriptionFile",
+                    name: "prescriptionFile",
+                    accept: ".pdf",
+                    ref: register({ required: true }),
+                  }}
+                />
+              </>
+            )}
+            {file && (
+              <div>
+                <Typography
+                  variant="body2"
+                  component="p"
+                  className={classes.prescriptionLabel}
+                >
+                  Prescription uploaded!
+                </Typography>
+                <Button type="submit" variant="contained" color="primary" style={{ width: '350px'}} onClick={onClickPrescription}>
+                  SUBMIT AND VALIDATE MY IDENTITY
+                </Button>
+              </div>
+            )}
+            <div>{hash}</div>
+            {errors.prescriptionFile && (
+              <FormHelperText error={Boolean(errors.prescriptionFile)}>
+                <Trans i18nKey="patientPrescriptionFieldRequiredError">
+                  Prescription file is required
+                </Trans>
+              </FormHelperText>
+            )}
+          </FormControl>
+        )}
+        {!uploadForm && (
+          <>
+            <FormControl className={classes.formControl}>
+              <TextField
+                required
+                id="patientName"
+                name="patientName"
+                label={t("patientNameLabel")}
+                autoComplete="pname"
+                inputRef={register({ required: true })}
+                error={Boolean(errors.patientName)}
               />
-            }
-            label={t("privatePrescriptionLabel")}
-          />
-          <FormHelperText style={{fontSize: '11px'}}>
-            <Trans i18nKey="privateCheckboxHelper">
-              If checked only patient can use this prescription to buy medicines
-            </Trans>
-          </FormHelperText>
-        </FormControl>
-        <FormControl component="fieldset" className={classes.formControl}>
-          <Button type="submit" variant="contained" color="primary" style={{ width: '350px'}}>
-            <Trans i18nKey="submitButtonLabel">Submit</Trans>
-          </Button>
-        </FormControl>
+              {errors.patientName && (
+                <FormHelperText error={true}>
+                  <Trans i18nKey="patientNameFieldRequiredError">
+                    Patient name is required
+                  </Trans>
+                </FormHelperText>
+              )}
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <TextField
+                required
+                id="patientEmail"
+                name="patientEmail"
+                label={t("patientEmailLabel")}
+                autoComplete="pemail"
+                inputRef={register({
+                  required: true,
+                  pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                })}
+                error={Boolean(errors.patientEmail)}
+              />
+              {errors.patientEmail && errors.patientEmail.type === "required" && (
+                <FormHelperText error={true}>
+                  <Trans i18nKey="patientEmailFieldRequiredError">
+                    Patient e-mail is required
+                  </Trans>
+                </FormHelperText>
+              )}
+              {errors.patientEmail && errors.patientEmail.type === "pattern" && (
+                <FormHelperText error={true}>
+                  <Trans i18nKey="patientEmailFieldInvalidError">
+                    Patient e-mail is invalid
+                  </Trans>
+                </FormHelperText>
+              )}
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <TextField
+                required
+                id="patientId"
+                name="patientId"
+                label={t("patientIDLabel")}
+                autoComplete="pdocumentid"
+                inputRef={register({ required: true })}
+                error={Boolean(errors.patientId)}
+              />
+              {errors.patientId && (
+                <FormHelperText error={true}>
+                  <Trans i18nKey="patientDocumentIdFieldRequiredError">
+                    Patient document ID is required
+                  </Trans>
+                </FormHelperText>
+              )}
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <TextField
+                required
+                id="maxUses"
+                name="maxUses"
+                label={t("maxUsesLabel")}
+                autoComplete="pdocumentid"
+                type="number"
+                defaultValue={1}
+                inputProps={{ min: 1 }}
+                inputRef={register({ required: true })}
+                error={Boolean(errors.maxUses)}
+              />
+              {errors.maxUses && (
+                <FormHelperText error={true}>
+                  <Trans>Max uses is required</Trans>
+                </FormHelperText>
+              )}
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <Typography component="p">
+                <Trans i18nKey="expirationDateLabel">
+                  Prescription expiration date
+                </Trans>
+              </Typography>
+              <DatePicker
+                value={selectExpiredDate}
+                onChange={handleExpiredDateChange}
+                format="DD/MM/YYYY"
+                minDate={new Date()}
+              />
+            </FormControl>
+            <FormControl component="fieldset" className={classes.formControl} style={{marginTop: '45px'}}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={privatePrescription}
+                    onChange={(event) =>
+                      handlePrivateChange(event.currentTarget.checked)
+                    }
+                    name="isPrivate"
+                    color="primary"
+                    inputProps={{
+                      ref: register,
+                    }}
+                  />
+                }
+                label={t("privatePrescriptionLabel")}
+              />
+              <FormHelperText style={{fontSize: '11px'}}>
+                <Trans i18nKey="privateCheckboxHelper">
+                  If checked only patient can use this prescription to buy medicines
+                </Trans>
+              </FormHelperText>
+            </FormControl>
+            <FormControl component="fieldset" className={classes.formControl}>
+              <Button type="submit" variant="contained" color="primary" style={{ width: '350px'}}>
+                <Trans i18nKey="submitButtonLabel">Submit</Trans>
+              </Button>
+            </FormControl>
+          </>
+        )}
       </div>
     </form>
   );
