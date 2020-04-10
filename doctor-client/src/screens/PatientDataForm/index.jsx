@@ -145,12 +145,6 @@ export default () => {
                   </Trans>
                 </Alert>
               )}
-
-              <Typography variant="subtitle1" component="p">
-                <Trans i18nKey="fillToCreateNewPrescription">
-                  Fill fields bellow to create a new medical prescription:
-                </Trans>
-              </Typography>
               {Boolean(validationError) && (
                 <Alert severity="error">{validationError}</Alert>
               )}
