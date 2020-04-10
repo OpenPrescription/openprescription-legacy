@@ -13,6 +13,8 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/Auth";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
+import logo from '../../assets/logo.svg';
+
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2),
@@ -57,16 +59,11 @@ export default () => {
     <header>
       <CssBaseline />
       <AppBar position="relative">
-        <Toolbar>
-          <DashboardIcon className={classes.icon} />
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            Open Prescription
-          </Typography>
+        <Toolbar style={{display: 'flex', justifyContent: 'space-between'}}>
+
+          <img src={logo} />
+
+          <div>
           <Button
             color="inherit"
             aria-controls="language-menu"
@@ -84,6 +81,7 @@ export default () => {
           >
             <ExitToAppIcon/>
           </Button>
+          </div>
         </Toolbar>
         <Menu
           id="language-menu"
