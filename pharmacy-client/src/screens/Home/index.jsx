@@ -15,6 +15,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import IconButton from "@material-ui/core/IconButton";
 import {
   fetchResume as fetchPrescriptionResume,
   sendDispensing as sendPrescriptionDispensing,
@@ -24,6 +25,7 @@ import Alert from "@material-ui/lab/Alert";
 import { useUser } from "../../contexts/User";
 import { useHistory, useParams } from "react-router-dom";
 import UploadIcon from "../../svgs/upload";
+import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 
 export default () => {
   const [prescriptionFile, setPrescriptionFile] = useState(null);
@@ -487,9 +489,10 @@ export default () => {
           </Grid>
 
           <div className={gridTitle}>
-            <Typography variant="subtitle1">
-              Digital signature information
-            </Typography>
+            <Button color="primary" aria-label="add to shopping cart" style={{padding: '10px 0'}}>
+              <VerifiedUserIcon  style={{ marginRight: 10}}/>
+              {"  "} Digital Signature Verified
+            </Button>
           </div>
 
           <Grid container spacing={2}>
@@ -525,7 +528,7 @@ export default () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant="body2" className={label}>
-                {t("message")}
+                {t("message")}{" "}
               </Typography>
               <Typography
                 variant="body1"
