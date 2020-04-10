@@ -42,25 +42,9 @@ export default ({ onSubmit }) => {
   const [prescriptionFile, setPrescriptionFile] = useState(null);
   const [hash, setHash] = useState(null);
 
-  const onUploadPrescription = (files) => {
-    setPrescriptionFile(files[0]);
-    console.log(files[0]);
-    try {
-      const reader = new FileReader();
-      reader.onloadend = function (e) {
-        const hash = sha256.create()
-          .update(e.target.result)
-          .hex();
-        setHash(hash.toString());
-      };
-      reader.readAsArrayBuffer(files[0]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const onUploadPrescription = (files) => {};
 
   const handleFormSubmit = (data) => {
-    data.hash = hash;
     data.expirationDate = selectExpiredDate;
     if (typeof onSubmit === "function") onSubmit(data);
   };

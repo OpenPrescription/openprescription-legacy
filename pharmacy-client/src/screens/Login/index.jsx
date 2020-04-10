@@ -14,16 +14,14 @@ import { useAuth } from "../../contexts/Auth";
 // -------------------------------------------------------------------
 
 export default () => {
-  const [documentId, setDocumentId] = useState("");
-  const [companyId, setCompanyId] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   let history = useHistory();
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
   const { login } = useAuth();
 
-  const onSubmit = ({ documentId, companyId }) => {
-    login({ documentId, companyId });
+  const onSubmit = ({ documentId, companyId, name, companyName }) => {
+    login({ documentId, companyId, name, companyName });
     history.replace(from);
   };
 
@@ -67,14 +65,12 @@ export default () => {
           <TextField
             autoFocus
             margin="dense"
-            id="documentId"
-            name="documentId"
-            label={t("documentId")}
+            id="name"
+            name="name"
+            label={t("name")}
             type="text"
             fullWidth
             required
-            onChange={(e) => setDocumentId(e.target.value)}
-            value={documentId}
             className={input}
             error={Boolean(errors.documentId)}
             inputProps={{
@@ -89,6 +85,50 @@ export default () => {
             </FormHelperText>
           )}
           <TextField
+            autoFocus
+            margin="dense"
+            id="documentId"
+            name="documentId"
+            label={t("documentId")}
+            type="text"
+            fullWidth
+            required
+            className={input}
+            error={Boolean(errors.documentId)}
+            inputProps={{
+              ref: register({ required: true }),
+            }}
+          />
+          {errors.documentId && (
+            <FormHelperText error={true}>
+              <Trans i18nKey="documentIdRequired">
+                Document ID is required
+              </Trans>
+            </FormHelperText>
+          )}
+          <TextField
+            autoFocus
+            margin="dense"
+            id="companyName"
+            name="companyName"
+            label={t("pharmacyName")}
+            type="text"
+            fullWidth
+            required
+            className={input}
+            error={Boolean(errors.companyName)}
+            inputProps={{
+              ref: register({ required: true }),
+            }}
+          />
+          {errors.companyName && (
+            <FormHelperText error={true}>
+              <Trans i18nKey="companyNameRequired">
+                Document ID is required
+              </Trans>
+            </FormHelperText>
+          )}
+          <TextField
             margin="dense"
             id="companyId"
             name="companyId"
@@ -96,8 +136,6 @@ export default () => {
             type="text"
             fullWidth
             required
-            onChange={(e) => setCompanyId(e.target.value)}
-            value={companyId}
             error={Boolean(errors.companyId)}
             inputProps={{
               ref: register({ required: true }),

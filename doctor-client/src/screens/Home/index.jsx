@@ -62,15 +62,15 @@ export default () => {
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsOriginalMy(file);
-      reader.onload = (e) =>
-        resolve(sha256.create().update(e.target.result).hex());
+      reader.onload = (e) => resolve(sha256(e.target.result));
       reader.onerror = (error) => reject(error);
     });
 
   const sendPrescription = async (data) => {
     try {
-      data.prescriptionFile = await toBase64(data.prescriptionFile[0]);
+      const base64File = await toBase64(data.prescriptionFile[0]);
       data.hash = await toSha256(data.prescriptionFile[0]);
+      data.prescriptionFile = base64File;
       await createPrescription(data);
       window.scrollTo(0, 0);
       setCreationResponse("success");
@@ -98,6 +98,7 @@ export default () => {
   const onSubmitPrescription = async (data) => {
     const doctorId = getDoctorId();
     data.doctorId = doctorId;
+    data.hash = await toSha256(data.prescriptionFile[0]);
     setPrescription(data);
     if (!doctorId) {
       return toggleDoctorIdRequest(true);

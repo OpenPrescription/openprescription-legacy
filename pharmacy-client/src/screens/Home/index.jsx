@@ -87,6 +87,8 @@ export default () => {
       pharmacist: {
         documentId: user.documentId,
         companyId: user.companyId,
+        name: user.name,
+        pharmacyName: user.pharmacyName,
       },
       purchaserDocumentId,
       prescriptionId: prescriptionData.prescription.id,
@@ -180,6 +182,31 @@ export default () => {
   return (
     <section>
       <Container maxWidth="sm" style={{ paddingTop: 20 }}>
+        <div style={{ paddingBottom: 10 }}>
+          <Typography variant="body2">{t("pharmacistLogged")}:</Typography>
+          <div>
+            <Typography variant="body2">
+              {user.name} - {user.documentId}
+            </Typography>
+          </div>
+        </div>
+        <UploadInput
+          multiple={false}
+          onChange={onUploadPrescription}
+          containerStyle={{
+            display: "flex",
+            width: "100%",
+            paddingBottom: "1rem",
+          }}
+          label={
+            prescriptionFile ? prescriptionFile.name : t("checkPrescription")
+          }
+          inputProps={{
+            id: "prescriptionFile",
+            name: "prescriptionFile",
+            accept: ".pdf",
+          }}
+        />
         {fetchResponse == "404" && (
           <Alert severity="error" className={alerts}>
             <Trans i18nKey="prescriptionNotFoundError">
@@ -208,26 +235,6 @@ export default () => {
             </Trans>
           </Alert>
         )}
-        <Typography variant="body2">
-          {t('pharmacistLogged')}: {user.documentId}
-        </Typography>
-        <UploadInput
-          multiple={false}
-          onChange={onUploadPrescription}
-          containerStyle={{
-            display: "flex",
-            width: "100%",
-            paddingTop: "2rem",
-          }}
-          label={
-            prescriptionFile ? prescriptionFile.name : t("checkPrescription")
-          }
-          inputProps={{
-            id: "prescriptionFile",
-            name: "prescriptionFile",
-            accept: ".pdf",
-          }}
-        />
       </Container>
       {prescriptionData && (
         <Container maxWidth="sm" className={solidContainer}>
@@ -247,17 +254,13 @@ export default () => {
           )}
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Typography variant="body2">
-                {t('doctorName')}
-              </Typography>
+              <Typography variant="body2">{t("doctorName")}</Typography>
               <Typography variant="body1">
                 {prescriptionData.doctor.name}
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="body2">
-                {t('doctorDocumentId')}
-              </Typography>
+              <Typography variant="body2">{t("doctorDocumentId")}</Typography>
               <Typography variant="body1">
                 {prescriptionData.doctor.documentId}
               </Typography>
@@ -268,9 +271,7 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="body2">
-                {t('doctorBlockchainId')}
-              </Typography>
+              <Typography variant="body2">{t("doctorBlockchainId")}</Typography>
               <Typography variant="body1">
                 {prescriptionData.doctor.blockchainid}
               </Typography>
@@ -281,17 +282,13 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="body2">
-                {t('doctorEmail')}
-              </Typography>
+              <Typography variant="body2">{t("doctorEmail")}</Typography>
               <Typography variant="body1">
                 {prescriptionData.doctor.email}
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="body2">
-                {t('doctorCompanyId')}
-              </Typography>
+              <Typography variant="body2">{t("doctorCompanyId")}</Typography>
               <Typography variant="body1">
                 {prescriptionData.doctor.companyId}
               </Typography>
@@ -302,17 +299,13 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Typography variant="body2">
-                {t('patientName')}
-              </Typography>
+              <Typography variant="body2">{t("patientName")}</Typography>
               <Typography variant="body1">
                 {prescriptionData.patient.name}
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="body2">
-                {t('patientDocumentId')}
-              </Typography>
+              <Typography variant="body2">{t("patientDocumentId")}</Typography>
               <Typography variant="body1">
                 {prescriptionData.patient.documentId}
               </Typography>
@@ -323,9 +316,7 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="body2">
-                {t('patientEmail')}
-              </Typography>
+              <Typography variant="body2">{t("patientEmail")}</Typography>
               <Typography variant="body1">
                 {prescriptionData.patient.email}
               </Typography>
@@ -336,17 +327,13 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Typography variant="body2">
-                {t('maxUses')}
-              </Typography>
+              <Typography variant="body2">{t("maxUses")}</Typography>
               <Typography variant="body1">
                 {prescriptionData.prescription.maxUses}
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="body2">
-                {t('usesCount')}
-              </Typography>
+              <Typography variant="body2">{t("usesCount")}</Typography>
               <Typography variant="body1">
                 {prescriptionData.prescription.usesCount}
               </Typography>
@@ -357,18 +344,14 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Typography variant="body2">
-                {t('lastUseAt')}
-              </Typography>
+              <Typography variant="body2">{t("lastUseAt")}</Typography>
               <Typography variant="body1">
                 {getFormattedDate(prescriptionData.prescription.lastUseAt) ||
                   t("neverUsed")}
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="body2">
-                {t('createdAt')}
-              </Typography>
+              <Typography variant="body2">{t("createdAt")}</Typography>
               <Typography variant="body1">
                 {getFormattedDate(prescriptionData.prescription.createdAt)}
               </Typography>
@@ -382,9 +365,7 @@ export default () => {
               <Grid container spacing={2}>
                 {prescriptionData.invalidAt && (
                   <Grid item xs={6}>
-                    <Typography variant="body2">
-                      {t('invalidAt')}
-                    </Typography>
+                    <Typography variant="body2">{t("invalidAt")}</Typography>
                     <Typography variant="body1">
                       {getFormattedDate(
                         prescriptionData.prescription.invalidAt
@@ -394,9 +375,7 @@ export default () => {
                 )}
                 {prescriptionData.expiredAt && (
                   <Grid item xs={6}>
-                    <Typography variant="body2">
-                      {t('expiredAt')}
-                    </Typography>
+                    <Typography variant="body2">{t("expiredAt")}</Typography>
                     <Typography variant="body1">
                       {getFormattedDate(
                         prescriptionData.prescription.expirationDate
@@ -409,9 +388,7 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="body2">
-                {t('signature')}
-              </Typography>
+              <Typography variant="body2">{t("signature")}</Typography>
               <Typography variant="body1" style={{ wordBreak: "break-all" }}>
                 {prescriptionData.block.signature}
               </Typography>
@@ -422,9 +399,7 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="body2">
-                {t('message')}
-              </Typography>
+              <Typography variant="body2">{t("message")}</Typography>
               <Typography variant="body1" style={{ wordBreak: "break-all" }}>
                 {prescriptionData.block.message}
               </Typography>
@@ -438,7 +413,7 @@ export default () => {
               className={button}
               onClick={() => setModalOpen(true)}
             >
-              {t('dispense')}
+              {t("dispense")}
             </Button>
           )}
           {modalOpen && (
@@ -448,7 +423,7 @@ export default () => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle className={modalTitle} id="alert-dialog-title">
-                {t('insertPurchaserId')}
+                {t("insertPurchaserId")}
               </DialogTitle>
               <DialogContent className={modalContent}>
                 <form noValidate onSubmit={sendDispensa}>
@@ -479,7 +454,7 @@ export default () => {
                     color="primary"
                     className={button}
                   >
-                    {t('submit')}
+                    {t("submit")}
                   </Button>
                 </form>
               </DialogContent>
