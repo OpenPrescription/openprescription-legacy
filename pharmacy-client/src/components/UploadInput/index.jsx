@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default ({ label, inputProps, multiple, onChange, lableStyle = {}, buttonStyle = {}, containerStyle = {} }) => {
+export default ({ label, inputProps, multiple, onChange, buttonProps, lableStyle = {}, buttonStyle = {}, containerStyle = {} }) => {
   const classes = useStyles();
 
   const onInputChange = (files) => {
@@ -31,6 +31,7 @@ export default ({ label, inputProps, multiple, onChange, lableStyle = {}, button
           color="primary"
           component="span"
           style={buttonStyle}
+          {...buttonProps}
         >
           {label}
         </Button>

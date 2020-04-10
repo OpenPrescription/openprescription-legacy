@@ -14,7 +14,7 @@ export default {
   checkPrescription: "Verificar Receita",
   prescriptionIsExired: "Prescription is expired",
   prescriptionNoUsesLeft: "A receita médica atingiu o numero maximo de usos",
-  pharmacistLogged: "Farmacêutico Registrado",
+  pharmacistLogged: "Você está conectado!",
   doctorName: "Nome do Doutor",
   doctorDocumentId: "CPF do Doutor",
   doctorBlockchainId: "Identificação Blockchain do Doutor",
@@ -31,7 +31,7 @@ export default {
   expiredAt: "Data de expiração",
   signature: "Assinatura",
   message: "Mensagem",
-  dispense: "Dispensa",
+  dispense: "DISPENSE MEDICATION",
   insertPurchaserId: "Insira o CPF do comprador para finalizar",
   submit: "Enviar",
 };

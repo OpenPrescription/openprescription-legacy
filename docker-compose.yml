@@ -1,24 +1,7 @@
 version: "3.4"
 
 services:
-  api-server:
-    container_name: OpenPrescriptionAPI
-    network_mode: host
-    build:
-      context: ./api-server
-      network: host
-      dockerfile: Dockerfile
-    environment:
-      API_HOST: http://localhost:3000
-      PORT: 3000
-    expose:
-      - 3000
-    ports:
-      - 3000:3000
-    volumes:
-      - ./api-server/src:/home/node/openprescription/server/src
-      - /tmp:/tmp
-    command: yarn run dev
+
   doctor-client:
     container_name: OpenPrescriptionDoctorClient
     network_mode: host
