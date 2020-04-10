@@ -29,7 +29,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 20,
     color: '#00767A',
     fontWeight: 900,
-    textAlign: 'center'
+    textAlign: 'center',
+    marginBottom: '20px'
   },
   formControl: {
     margin: theme.spacing(0, 0, 2, 0),
@@ -62,7 +63,8 @@ export default ({ onSubmit, uploadForm, onUploadPrescription, file, onClickPresc
         {uploadForm && (
           <FormControl className={classes.formControl}>
             {!file && (
-              <div style={{ position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', maxWidth: '90%' }}>
+              // <div style={{ position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', maxWidth: '90%' }}>
+              <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', minHeight: '600px', justifyContent: 'center' }}>
                 <Typography
                   variant="body2"
                   component="p"
@@ -86,11 +88,12 @@ export default ({ onSubmit, uploadForm, onUploadPrescription, file, onClickPresc
                     accept: ".pdf",
                     ref: register({ required: true }),
                   }}
+                  
                 />
               </div>
             )}
             {file && (
-              <div style={{ position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', maxWidth: '90%' }}>
+              <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', minHeight: '600px', justifyContent: 'center', alignItems: 'center' }}>
                 <Typography
                   variant="body2"
                   component="p"

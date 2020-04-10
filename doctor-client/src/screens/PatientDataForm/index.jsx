@@ -49,6 +49,7 @@ export default () => {
   const [prescriptionFile, setPrescriptionFile] = useState(false);
   const [validationError, setValidationError] = useState(null);
   const [creationResponse, setCreationResponse] = useState("");
+  
   const [uploadForm, setUploadForm] = useState(false);
   const user = useUser();
   const history = useHistory();
@@ -146,12 +147,10 @@ export default () => {
             {creationResponse === "success" && (
               <div
                 style={{
-                  position: "fixed",
-                  left: "50%",
-                  top: "50%",
-                  transform: "translate(-50%, -50%)",
-                  textAlign: "center",
-                  maxWidth: "90%",
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  minHeight: '600px',
+                  justifyContent: 'center',
                 }}
               >
                 <Typography
