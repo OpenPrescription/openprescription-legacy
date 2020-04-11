@@ -108,8 +108,6 @@ export default () => {
       window.scrollTo(0, 0);
       getPrecription(pathHash);
       setPrescriptionDispensingStatus("success");
-      history.replace(`/`);
-      history.go(`/`);
     } catch (err) {
       setModalOpen(false);
       setPrescriptionDispensingStatus("error");
@@ -299,6 +297,10 @@ export default () => {
               </Trans>
             </Alert>
           )}
+        </Container>
+      )}
+      {prescriptionData && (
+        <Container maxWidth="md" className={solidContainer}>
           {prescriptionDispensingStatus == "error" && (
             <Alert severity="error" className={alerts}>
               <Trans i18nKey="prescriptionDispensingUnexpectedError">
@@ -313,10 +315,6 @@ export default () => {
               </Trans>
             </Alert>
           )}
-        </Container>
-      )}
-      {prescriptionData && (
-        <Container maxWidth="md" className={solidContainer}>
           <div className={backButtonContainer}>
             <Button
               color="black"
@@ -489,8 +487,12 @@ export default () => {
           </Grid>
 
           <div className={gridTitle}>
-            <Button color="primary" aria-label="add to shopping cart" style={{padding: '10px 0'}}>
-              <VerifiedUserIcon  style={{ marginRight: 10}}/>
+            <Button
+              color="primary"
+              aria-label="add to shopping cart"
+              style={{ padding: "10px 0" }}
+            >
+              <VerifiedUserIcon style={{ marginRight: 10 }} />
               {"  "} Digital Signature Verified
             </Button>
           </div>
@@ -544,7 +546,9 @@ export default () => {
             variant="contained"
             color="primary"
             className={button}
-            disabled={!isDispensable}
+            disabled={
+              !isDispensable || prescriptionDispensingStatus == "success"
+            }
             onClick={() => setModalOpen(true)}
           >
             {t("dispense")}

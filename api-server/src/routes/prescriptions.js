@@ -22,7 +22,8 @@ Router.post("/", async (req, res) => {
     await PrescriptionRepository.store.create(
       doctor,
       document.split(",")[1],
-      data
+      data,
+      reqDoctor.documentId
     );
     return res.success();
   } catch (err) {
