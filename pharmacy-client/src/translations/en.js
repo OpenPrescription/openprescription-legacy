@@ -12,7 +12,7 @@ export default {
   checkPrescription: "Check Prescription",
   prescriptionIsExired: "Prescription is expired",
   prescriptionNoUsesLeft: "The prescription reached the maximum number of uses",
-  pharmacistLogged: "Pharmacist Logged",
+  pharmacistLogged: "You are Logged!",
   doctorName: "Doctor Name",
   doctorDocumentId: "Doctor Document ID",
   doctorBlockchainId: "Doctor Blockchain ID",
@@ -29,7 +29,7 @@ export default {
   expiredAt: "Expiration Date",
   signature: "Signature",
   message: "Message",
-  dispense: "Dispense",
+  dispense: "DISPENSE MEDICATION",
   insertPurchaserId: "Insert purchaser document ID to finish",
   submit: "Submit",
 };
