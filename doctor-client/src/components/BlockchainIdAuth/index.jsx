@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Typography } from "@material-ui/core";
 import {
   loginStatus,
   fetchUserByNonce,
   fetchNonce,
 } from "../../data/blockchainid";
+
+import phone from './../../assets/phone-image.svg';
+
 
 export default ({
   active,
@@ -12,6 +16,8 @@ export default ({
   onError,
   onExpired,
   authInterval = 3000,
+  doctorId,
+  prescriptionHash,
   ...props
 }) => {
   const { t } = useTranslation();
@@ -81,14 +87,27 @@ export default ({
   }, [ qrcode ]);
 
   return (
-    <div>
-      {qrcode && (
-        <img
-          src={qrcode}
-          style={{ display: "block", margin: "auto" }}
-          alt={t("doctorQrcodeSign")}
-        />
-      )}
+    <div style={{ display: "flex", justifyContent: "space-around" }}>
+      <div>
+        <img src={phone} />
+      </div>
+      <div style={{ textAlign: 'center'}}>
+        <div style={{ border: 'solid 1px #02BDC4', display: 'inline-block', borderRadius: '4px'}}>
+          {qrcode && (
+            <img
+              src={qrcode}
+              style={{ display: "block", margin: "auto" }}
+              alt={t("doctorQrcodeSign")}
+            />
+          )}
+        </div>
+        <Typography component="p" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '20px', fontSize: '14px'}}>
+          Point your phone to this screen to capture the code.
+        </Typography>
+
+        <Typography variant="body1">Doctor ID {doctorId}</Typography>
+        <Typography variant="body1">Hash: {prescriptionHash}</Typography>
+      </div>
     </div>
   );
 };
