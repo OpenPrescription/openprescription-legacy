@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { setAccessToken, getDoctorId } from "../../helpers/storage";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import { Trans } from "react-i18next";
 import Button from "@material-ui/core/Button";
 import { Typography } from "@material-ui/core";
 import BlockchainIdAuth from "../BlockchainIdAuth";
+import { makeStyles } from "@material-ui/core/styles";
 
-export default ({ prescription, onSigned }) => {
+export default ({ prescription, onSigned, doneAuth = false }) => {
   const [active, setActive] = useState(true);
   const blockchainIdInfos = [
     "name",
@@ -26,34 +22,41 @@ export default ({ prescription, onSigned }) => {
     })}`,
   ];
 
+  const useStyles = makeStyles((theme) => ({
+    prescriptionTitle: {
+      fontSize: 20,
+      color: '#00767A',
+      fontWeight: 900,
+      textAlign: 'center',
+      marginBottom: 40
+    },
+  }));
+
   return (
-    <div>
-      <Dialog open={active} aria-labelledby="blockchain-id-signature-dialog">
-        <DialogTitle id="blockchain-id-signature-dialog">
-          <Trans i18nKey="signPrescriptionTitle">Sign prescription</Trans>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+    <>
+      {!doneAuth && (
+        <div>
+          <Typography variant="subtitle1" component="p" style={{ textAlign: 'center'}}>
+            <Trans i18nKey="signPrescriptionTitle">Submission done successfully!</Trans>
+          </Typography>
+          <Typography component="p" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '30px', marginBottom: '60px'}}>
             <Trans i18nKey="signPrescriptionDescription">
-              Scan QR Code with your Blockchain ID to sign and submit the
-              prescription:
+              Now open your OriginalMy app and scan this QR Code to validate your identity.
             </Trans>
-          </DialogContentText>
-          <Typography variant="body1">Doctor ID {getDoctorId()}</Typography>
+          </Typography>
+
+
           <BlockchainIdAuth
             active={active}
             infos={blockchainIdInfos}
             onAuthentication={(user) => {
               onSigned(user);
             }}
+            doctorId={getDoctorId()}
+            prescriptionHash={prescription.hash}
           />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setActive(false)} color="primary">
-            <Trans i18nKey="cancel">Cancel</Trans>
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+        </div>
+      )}
+    </>
   );
 };

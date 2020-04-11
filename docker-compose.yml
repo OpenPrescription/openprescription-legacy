@@ -1,7 +1,6 @@
 version: "3.4"
 
 services:
-
   doctor-client:
     container_name: OpenPrescriptionDoctorClient
     network_mode: host
@@ -12,7 +11,7 @@ services:
     environment:
       PORT: 4000
       APP_SERVER_PORT: 3001
-      API_HOST: http://localhost:3000
+      API_HOST: https://openprescription-api.herokuapp.com
       API_KEY: YR4TBVHMBB4HJKEDB7DC25KV29A3RD6X
       APP_HOST: http://localhost:3001
       ORIGINALMY_API_URL: https://api1.originalmy.com
@@ -35,7 +34,7 @@ services:
     environment:
       PORT: 4001
       APP_SERVER_PORT: 3002
-      API_HOST: http://localhost:3000
+      API_HOST: https://openprescription-api.herokuapp.com
       API_KEY: YR4TBVHMBB4HJKEDB7DC25KV29A3RD6X
       APP_HOST: http://localhost:3002
     expose:
