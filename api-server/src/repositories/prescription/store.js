@@ -30,6 +30,7 @@ const createCertificate = async ({
   doctorId,
   doctorEmail,
   hash,
+  doctorDocumentId,
   maxUses,
   expiredAt,
   isPrivate,
@@ -54,6 +55,7 @@ const createCertificate = async ({
     blockchainId,
     message,
     digitalSignature,
+    doctorDocumentId
   });
   return pdf.buffer();
 };
@@ -78,11 +80,11 @@ const buffer2sha256 = (buffer) => {
   return crypto.createHash("sha256").update(buffer).digest("hex");
 };
 
-const create = async (doctor, prescriptionFile, data) => {
+const create = async (doctor, prescriptionFile, data, doctorDocumentId) => {
   const {
     patientName,
     patientEmail,
-    doctorCompanyId,
+    company,
     hash,
     maxUses,
     digitalSignature,
@@ -95,7 +97,7 @@ const create = async (doctor, prescriptionFile, data) => {
     patientName,
     patientDocumentId: data.patientId,
     patientEmail,
-    doctorCompanyId,
+    doctorCompanyId: company.id,
     hash,
     maxUses,
     private: data.isPrivate,
@@ -110,7 +112,7 @@ const create = async (doctor, prescriptionFile, data) => {
     patientDocumentId: data.patientId,
     doctorName: doctor.name,
     doctorEmail: doctor.email,
-    doctorId: doctor.id,
+    doctorDocumentId,
     hash,
     maxUses,
     expiredAt: expirationDate,

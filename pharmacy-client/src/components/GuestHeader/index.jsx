@@ -8,6 +8,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
+import logo from "../../assets/logo.svg";
+
 const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
@@ -20,16 +22,11 @@ const useStyles = makeStyles((theme) => ({
 export default () => {
   const classes = useStyles();
   return (
-    <header >
+    <header>
       <CssBaseline />
       <AppBar position="relative">
         <Toolbar>
-          <IconButton edge="start"  className={classes.menuButton} color="inherit" aria-label="menu">
-            <DashboardIcon className={classes.icon} />
-          </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.title}>
-            Open Prescription
-          </Typography>
+          <img src={logo} />
         </Toolbar>
       </AppBar>
     </header>

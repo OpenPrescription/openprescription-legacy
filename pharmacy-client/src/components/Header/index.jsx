@@ -11,7 +11,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/Auth";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+
+import logo from "../../assets/logo.svg";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -56,33 +58,28 @@ export default () => {
     <header>
       <CssBaseline />
       <AppBar position="relative">
-        <Toolbar>
-          <DashboardIcon className={classes.icon} />
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            Open Prescription
-          </Typography>
-          <Button
-            color="inherit"
-            aria-controls="language-menu"
-            aria-haspopup="true"
-            onClick={handleSelectLanguage}
-          >
-            {language}
-            <KeyboardArrowDownIcon />
-          </Button>
-          <Button
-            color="inherit"
-            aria-controls="language-menu"
-            aria-haspopup="true"
-            onClick={handleLogout}
-          >
-            <ExitToAppIcon/>
-          </Button>
+        <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
+          <img src={logo} />
+
+          <div>
+            <Button
+              color="inherit"
+              aria-controls="language-menu"
+              aria-haspopup="true"
+              onClick={handleSelectLanguage}
+            >
+              {language}
+              <KeyboardArrowDownIcon />
+            </Button>
+            <Button
+              color="inherit"
+              aria-controls="language-menu"
+              aria-haspopup="true"
+              onClick={handleLogout}
+            >
+              <ExitToAppIcon />
+            </Button>
+          </div>
         </Toolbar>
         <Menu
           id="language-menu"

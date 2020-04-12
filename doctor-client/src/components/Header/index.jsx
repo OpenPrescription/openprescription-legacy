@@ -10,6 +10,10 @@ import MenuItem from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../contexts/Auth";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
+import logo from '../../assets/logo.svg';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -21,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    textTransform: 'uppercase'
   },
   menuItemBlock: {
     display: 'block',
@@ -33,6 +38,7 @@ export default () => {
   const { i18n } = useTranslation();
   const [language, setLanguage] = useState(i18n.language);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const { logout } = useAuth();
 
   const handleSelectLanguage = (event, lang) => {
     if (!lang) return setAnchorEl(event.currentTarget);
@@ -45,20 +51,19 @@ export default () => {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <header>
       <CssBaseline />
       <AppBar position="relative">
-        <Toolbar>
-          <DashboardIcon className={classes.icon} />
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            Open Prescription
-          </Typography>
+        <Toolbar style={{display: 'flex', justifyContent: 'space-between'}}>
+
+          <img src={logo} />
+
+          <div>
           <Button
             color="inherit"
             aria-controls="language-menu"
@@ -68,6 +73,15 @@ export default () => {
             {language}
             <KeyboardArrowDownIcon />
           </Button>
+          <Button
+            color="inherit"
+            aria-controls="language-menu"
+            aria-haspopup="true"
+            onClick={handleLogout}
+          >
+            <ExitToAppIcon/>
+          </Button>
+          </div>
         </Toolbar>
         <Menu
           id="language-menu"

@@ -29,4 +29,12 @@ export default {
     "Receita criada com sucesso. Uma cópia foi enviado para o paciente por e-mail.",
   prescriptionUnkownErrorMessage:
     "Não foi possível cadastrar a receita. Tente novamente mais tarde.",
+  companyName: "Nome da empresa",
+  companyId: "CNPJ",
+  homeScreenTitle: 'Envie suas prescrições médicas remotamente.',
+  homeScreenText: 'Agora, seu paciente não precisa sair de casa para obter uma receita. Sua identidade autenticada com segurança pela blockchain.',
+  homeScreenButton: 'Iniciar prescrição',
+  prescriptionSent: 'Obrigado, sua prescrição foi enviada!',
+  prescriptionUploaded: 'Prescrição enviada',
+  validateIdentity: 'Enviar e validar minha identidade'
 };

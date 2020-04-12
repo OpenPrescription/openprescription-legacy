@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import sha256 from "crypto-js/sha256";
+import sha256 from "js-sha256";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Typography from "@material-ui/core/Typography";
@@ -15,6 +15,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import IconButton from "@material-ui/core/IconButton";
 import {
   fetchResume as fetchPrescriptionResume,
   sendDispensing as sendPrescriptionDispensing,
@@ -23,16 +24,18 @@ import { Trans, useTranslation } from "react-i18next";
 import Alert from "@material-ui/lab/Alert";
 import { useUser } from "../../contexts/User";
 import { useHistory, useParams } from "react-router-dom";
+import UploadIcon from "../../svgs/upload";
+import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 
 export default () => {
   const [prescriptionFile, setPrescriptionFile] = useState(null);
-  const [hash, setHash] = useState(null);
   const [prescriptionData, setPrescriptionData] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [purchaserDocumentId, setPurchaserDocumentId] = useState("");
   const [fetchResponse, setFetchResponse] = useState(false);
   const [purchaserError, setPurchaserError] = useState(false);
+  const [isDispensable, setDispensable] = useState(false);
   const [
     prescriptionDispensingStatus,
     setPrescriptionDispensingStatus,
@@ -46,7 +49,7 @@ export default () => {
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsOriginalMy(file);
-      reader.onload = () => resolve(sha256(reader.getAsOriginalMyString()));
+      reader.onload = (e) => resolve(sha256(e.target.result));
       reader.onerror = (error) => reject(error);
     });
 
@@ -54,22 +57,20 @@ export default () => {
     setLoading(true);
     setPrescriptionFile(files[0]);
     const hash = await toSha256(files[0]);
-    //setHash(hash);
-    // try {
-    history.push(`${hash}`);
-    // await getPrecription(hash.toString());
-    // } catch (e) {
-    //   console.error(e);
-    // }
+    history.push(`/${hash}`);
     setLoading(false);
   };
 
   const getPrecription = async (hash) => {
+    setLoading(true);
     try {
       const {
         data: { data },
       } = await fetchPrescriptionResume(hash);
+      data.isExpired = new Date() > new Date(data.prescription.expirationDate);
+      data.noUseLeft = data.prescription.usesCount >= data.prescription.maxUses;
       setPrescriptionData(data);
+      setDispensable(!data.isExpired && !data.noUseLeft);
       setFetchResponse("success");
     } catch (err) {
       switch (err.response && err.response.status) {
@@ -81,6 +82,7 @@ export default () => {
           break;
       }
     }
+    setLoading(false);
   };
 
   const sendDispensa = async (e) => {
@@ -89,6 +91,8 @@ export default () => {
       pharmacist: {
         documentId: user.documentId,
         companyId: user.companyId,
+        name: user.name,
+        pharmacyName: user.pharmacyName,
       },
       purchaserDocumentId,
       prescriptionId: prescriptionData.prescription.id,
@@ -105,6 +109,7 @@ export default () => {
       getPrecription(pathHash);
       setPrescriptionDispensingStatus("success");
     } catch (err) {
+      setModalOpen(false);
       setPrescriptionDispensingStatus("error");
     }
   };
@@ -117,6 +122,11 @@ export default () => {
       month: "2-digit",
       day: "2-digit",
     });
+  };
+
+  const onReturn = () => {
+    history.replace(`/`);
+    history.go(`/`);
   };
 
   const useStyles = makeStyles((theme) => ({
@@ -141,6 +151,7 @@ export default () => {
       display: "block",
       margin: "30px auto 0",
       width: "100%",
+      padding: theme.spacing(2),
     },
     divider: {
       margin: "20px 0",
@@ -153,7 +164,42 @@ export default () => {
     },
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,
-      color: "#fff",
+      color: "#02BDC4",
+      background: "#fff",
+    },
+    alerts: {
+      marginBottom: theme.spacing(2),
+    },
+    loggedContainer: {
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)",
+      textAlign: "center",
+    },
+    backButton: {
+      textDecoration: "underline",
+      paddingLeft: 0,
+    },
+    backButtonContainer: {
+      paddingBottom: theme.spacing(2),
+    },
+    gridTitle: {
+      borderBottomColor: "#02BDC4",
+      borderBottomWidth: 1,
+      borderBottomStyle: "solid",
+      marginBottom: theme.spacing(4),
+      marginTop: theme.spacing(4),
+    },
+    label: {
+      fontWeight: "bold",
+      paddingBottom: theme.spacing(1),
+    },
+    value: {
+      wordBreak: "break-all",
+    },
+    alignRightContent: {
+      textAlign: "left",
     },
   }));
 
@@ -166,78 +212,150 @@ export default () => {
     divider,
     modalContent,
     modalTitle,
+    alerts,
+    loggedContainer,
+    backButton,
+    backButtonContainer,
+    gridTitle,
+    label,
+    value,
+    alignRightContent,
   } = useStyles();
 
   useEffect(() => {
-    if (pathHash) {
+    if (pathHash && pathHash != "") {
       getPrecription(pathHash);
     }
   }, [pathHash]);
 
   return (
     <section>
-      {fetchResponse == "404" && (
-        <Alert severity="error">
-          <Trans i18nKey="prescriptionNotFoundError">
-            Prescription not found!
-          </Trans>
-        </Alert>
+      {!prescriptionData && (
+        <Container maxWidth="sm" className={loggedContainer}>
+          <div style={{ paddingBottom: "2rem" }}>
+            <div style={{ paddingBottom: "2rem" }}>
+              <Typography variant="h5">{t("pharmacistLogged")}</Typography>
+            </div>
+            <div>
+              <Typography
+                variant="body2"
+                className={label}
+                style={{ fontWeight: "bold" }}
+              >
+                {user.name}
+              </Typography>
+            </div>
+            <div>
+              <Typography
+                variant="body2"
+                className={label}
+                style={{ fontWeight: "bold" }}
+              >
+                {user.documentId}
+              </Typography>
+            </div>
+          </div>
+          <UploadInput
+            multiple={false}
+            onChange={onUploadPrescription}
+            containerStyle={{
+              display: "flex",
+              width: "100%",
+              alingContent: "center",
+              justifyContent: "center",
+              paddingBottom: "1rem",
+            }}
+            label={
+              prescriptionFile ? prescriptionFile.name : t("checkPrescription")
+            }
+            buttonProps={{
+              size: "large",
+              style: {
+                width: "383px",
+                height: "69px",
+              },
+            }}
+            inputProps={{
+              id: "prescriptionFile",
+              name: "prescriptionFile",
+              accept: ".pdf",
+            }}
+          />
+          {pathHash && <div>{pathHash}</div>}
+          <UploadIcon style={{ paddingTop: "3rem" }} />
+          {fetchResponse == "404" && (
+            <Alert severity="error" className={alerts}>
+              <Trans i18nKey="prescriptionNotFoundError">
+                Prescription not found!
+              </Trans>
+            </Alert>
+          )}
+          {fetchResponse == "error" && (
+            <Alert severity="error" className={alerts}>
+              <Trans i18nKey="prescriptionUnexpectedError">
+                Unexpected error. Try again later.
+              </Trans>
+            </Alert>
+          )}
+        </Container>
       )}
-      {fetchResponse == "error" && (
-        <Alert severity="error">
-          <Trans i18nKey="prescriptionUnexpectedError">
-            Unexpected error. Try again later.
-          </Trans>
-        </Alert>
-      )}
-      {prescriptionDispensingStatus == "error" && (
-        <Alert severity="error">
-          <Trans i18nKey="prescriptionDispensingUnexpectedError">
-            Unexpected error. Try again later.
-          </Trans>
-        </Alert>
-      )}
-      {prescriptionDispensingStatus == "success" && (
-        <Alert severity="success">
-          <Trans i18nKey="prescriptionDispensedSuccess">
-            Prescription dispensed successfuly
-          </Trans>
-        </Alert>
-      )}
-      <Container maxWidth="sm" style={{ paddingTop: 20 }}>
-        <Typography variant="body2">
-          Pharmacist Logged: {user.documentId}
-        </Typography>
-        <UploadInput
-          multiple={false}
-          onChange={onUploadPrescription}
-          containerStyle={{
-            display: "flex",
-            width: "100%",
-            paddingTop: "2rem",
-          }}
-          label={
-            prescriptionFile ? prescriptionFile.name : "Check prescription"
-          }
-          inputProps={{
-            id: "prescriptionFile",
-            name: "prescriptionFile",
-            accept: ".pdf",
-          }}
-        />
-      </Container>
       {prescriptionData && (
-        <Container maxWidth="sm" className={solidContainer}>
+        <Container maxWidth="md" className={solidContainer}>
+          {prescriptionDispensingStatus == "error" && (
+            <Alert severity="error" className={alerts}>
+              <Trans i18nKey="prescriptionDispensingUnexpectedError">
+                Unexpected error. Try again later.
+              </Trans>
+            </Alert>
+          )}
+          {prescriptionDispensingStatus == "success" && (
+            <Alert severity="success" className={alerts}>
+              <Trans i18nKey="prescriptionDispensedSuccess">
+                Prescription dispensed successfuly
+              </Trans>
+            </Alert>
+          )}
+          <div className={backButtonContainer}>
+            <Button
+              color="black"
+              className={backButton}
+              onClick={(e) => onReturn()}
+            >
+              Back
+            </Button>
+          </div>
+          {prescriptionData.isExpired && (
+            <Alert severity="warning" className={alerts}>
+              <Trans i18nKey="prescriptionIsExired">
+                Prescription is expired
+              </Trans>
+            </Alert>
+          )}
+          {prescriptionData.noUseLeft && (
+            <Alert severity="warning" className={alerts}>
+              <Trans i18nKey="prescriptionNoUsesLeft">
+                The prescription reached the maximum number of uses
+              </Trans>
+            </Alert>
+          )}
+
+          <div className={gridTitle}>
+            <Typography variant="subtitle1">Doctor's information</Typography>
+          </div>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Typography variant="body2">Doctor Name</Typography>
-              <Typography variant="body1">
+              <Typography variant="body2" className={label}>
+                {t("doctorName")}
+              </Typography>
+              <Typography variant="body1" className={value}>
                 {prescriptionData.doctor.name}
               </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2">Doctor Document ID</Typography>
-              <Typography variant="body1">
+            <Grid item xs={6} className={alignRightContent}>
+              <Typography variant="body2" className={label}>
+                {t("doctorDocumentId")}
+              </Typography>
+              <Typography variant="body1" className={value}>
                 {prescriptionData.doctor.documentId}
               </Typography>
             </Grid>
@@ -246,43 +364,42 @@ export default () => {
           <Divider light className={divider} />
 
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="body2">Doctor Blockchain ID</Typography>
-              <Typography variant="body1">
-                {prescriptionData.doctor.blockchainid}
+            <Grid item md={6} xs={12}>
+              <Typography variant="body2" className={label}>
+                {t("doctorEmail")}
               </Typography>
-            </Grid>
-          </Grid>
-
-          <Divider light className={divider} />
-
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="body2">Doctor E-mail</Typography>
-              <Typography variant="body1">
+              <Typography variant="body1" className={value}>
                 {prescriptionData.doctor.email}
               </Typography>
             </Grid>
-            <Grid item xs={12}>
-              <Typography variant="body2">Doctor Company ID</Typography>
-              <Typography variant="body1">
+            <Grid item md={6} xs={12} className={alignRightContent}>
+              <Typography variant="body2" className={label}>
+                {t("doctorCompanyId")}
+              </Typography>
+              <Typography variant="body1" className={value}>
                 {prescriptionData.doctor.companyId}
               </Typography>
             </Grid>
           </Grid>
 
-          <Divider light className={divider} />
+          <div className={gridTitle}>
+            <Typography variant="subtitle1">Patient’s information</Typography>
+          </div>
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Typography variant="body2">Patient Name</Typography>
-              <Typography variant="body1">
+              <Typography variant="body2" className={label}>
+                {t("patientName")}
+              </Typography>
+              <Typography variant="body1" className={value}>
                 {prescriptionData.patient.name}
               </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2">Patient Document ID</Typography>
-              <Typography variant="body1">
+            <Grid item xs={6} className={alignRightContent}>
+              <Typography variant="body2" className={label}>
+                {t("patientDocumentId")}
+              </Typography>
+              <Typography variant="body1" className={value}>
                 {prescriptionData.patient.documentId}
               </Typography>
             </Grid>
@@ -292,25 +409,33 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="body2">Patient E-mail</Typography>
-              <Typography variant="body1">
+              <Typography variant="body2" className={label}>
+                {t("patientEmail")}
+              </Typography>
+              <Typography variant="body1" className={value}>
                 {prescriptionData.patient.email}
               </Typography>
             </Grid>
           </Grid>
 
-          <Divider light className={divider} />
+          <div className={gridTitle}>
+            <Typography variant="subtitle1">Medication information</Typography>
+          </div>
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Typography variant="body2">Max Uses</Typography>
-              <Typography variant="body1">
+              <Typography variant="body2" className={label}>
+                {t("maxUses")}
+              </Typography>
+              <Typography variant="body1" className={value}>
                 {prescriptionData.prescription.maxUses}
               </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2">Uses Count</Typography>
-              <Typography variant="body1">
+            <Grid item xs={6} className={alignRightContent}>
+              <Typography variant="body2" className={label}>
+                {t("usesCount")}
+              </Typography>
+              <Typography variant="body1" className={value}>
                 {prescriptionData.prescription.usesCount}
               </Typography>
             </Grid>
@@ -320,15 +445,19 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Typography variant="body2">Last Use At</Typography>
-              <Typography variant="body1">
+              <Typography variant="body2" className={label}>
+                {t("lastUseAt")}
+              </Typography>
+              <Typography variant="body1" className={value}>
                 {getFormattedDate(prescriptionData.prescription.lastUseAt) ||
                   t("neverUsed")}
               </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2">Created At</Typography>
-              <Typography variant="body1">
+            <Grid item xs={6} className={alignRightContent}>
+              <Typography variant="body2" className={label}>
+                {t("createdAt")}
+              </Typography>
+              <Typography variant="body1" className={value}>
                 {getFormattedDate(prescriptionData.prescription.createdAt)}
               </Typography>
             </Grid>
@@ -336,36 +465,61 @@ export default () => {
 
           <Divider light className={divider} />
 
-          {prescriptionData.invalidAt ||
-            (prescriptionData.expiredAt && (
-              <Grid container spacing={2}>
-                {prescriptionData.invalidAt && (
-                  <Grid item xs={6}>
-                    <Typography variant="body2">Invalid At</Typography>
-                    <Typography variant="body1">
-                      {getFormattedDate(
-                        prescriptionData.prescription.invalidAt
-                      )}
-                    </Typography>
-                  </Grid>
-                )}
-                {prescriptionData.expiredAt && (
-                  <Grid item xs={6}>
-                    <Typography variant="body2">Expired At</Typography>
-                    <Typography variant="body1">
-                      {getFormattedDate(
-                        prescriptionData.prescription.expirationDate
-                      )}
-                    </Typography>
-                  </Grid>
-                )}
+          <Grid container spacing={2}>
+            <Grid item xs={6} className={alignRightContent}>
+              <Typography variant="body2" className={label}>
+                {t("expiredAt")}
+              </Typography>
+              <Typography variant="body1" className={value}>
+                {getFormattedDate(prescriptionData.prescription.expirationDate)}
+              </Typography>
+            </Grid>
+            {prescriptionData.prescription.invalidAt && (
+              <Grid item xs={6}>
+                <Typography variant="body2" className={label}>
+                  {t("invalidAt")}
+                </Typography>
+                <Typography variant="body1" className={value}>
+                  {getFormattedDate(prescriptionData.prescription.invalidAt)}
+                </Typography>
               </Grid>
-            ))}
+            )}
+          </Grid>
+
+          <div className={gridTitle}>
+            <Button
+              color="primary"
+              aria-label="add to shopping cart"
+              style={{ padding: "10px 0" }}
+            >
+              <VerifiedUserIcon style={{ marginRight: 10 }} />
+              {"  "} Digital Signature Verified
+            </Button>
+          </div>
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="body2">Signature</Typography>
-              <Typography variant="body1" style={{ wordBreak: "break-all" }}>
+              <Typography variant="body2" className={label}>
+                {t("doctorBlockchainId")}
+              </Typography>
+              <Typography variant="body1" className={value}>
+                {prescriptionData.doctor.blockchainid}
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Divider light className={divider} />
+
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="body2" className={label}>
+                {t("signature")}
+              </Typography>
+              <Typography
+                variant="body1"
+                className={value}
+                style={{ wordBreak: "break-all" }}
+              >
                 {prescriptionData.block.signature}
               </Typography>
             </Grid>
@@ -375,8 +529,14 @@ export default () => {
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="body2">Message</Typography>
-              <Typography variant="body1" style={{ wordBreak: "break-all" }}>
+              <Typography variant="body2" className={label}>
+                {t("message")}{" "}
+              </Typography>
+              <Typography
+                variant="body1"
+                className={value}
+                style={{ wordBreak: "break-all" }}
+              >
                 {prescriptionData.block.message}
               </Typography>
             </Grid>
@@ -384,12 +544,20 @@ export default () => {
 
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             className={button}
+            disabled={
+              !isDispensable || prescriptionDispensingStatus == "success"
+            }
             onClick={() => setModalOpen(true)}
           >
-            Dispense
+            {t("dispense")}
           </Button>
+          {prescriptionDispensingStatus == "success" && (
+            <div style={{ textAlign: "center", padding: 20 }}>
+              <Typography variant="subtitle1">Done!</Typography>
+            </div>
+          )}
           {modalOpen && (
             <Dialog
               open={modalOpen}
@@ -397,7 +565,7 @@ export default () => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle className={modalTitle} id="alert-dialog-title">
-                Insert purchaser document ID to finish
+                {t("insertPurchaserId")}
               </DialogTitle>
               <DialogContent className={modalContent}>
                 <form noValidate onSubmit={sendDispensa}>
@@ -428,7 +596,7 @@ export default () => {
                     color="primary"
                     className={button}
                   >
-                    submit
+                    {t("submit")}
                   </Button>
                 </form>
               </DialogContent>

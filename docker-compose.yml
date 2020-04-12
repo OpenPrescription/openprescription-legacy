@@ -9,53 +9,40 @@ services:
       network: host
       dockerfile: Dockerfile
     environment:
-      PORT: ${REACT_APP_DOCTOR_CLIENT_PORT}
-      APP_SERVER_PORT: ${DOCTOR_SERVER_PORT}
-      API_HOST: ${API_HOST}
-      API_KEY: ${API_KEY}
-      APP_HOST: ${DOCTOR_CLIENT_HOST}
-      ORIGINALMY_API_URL: ${ORIGINALMY_API_URL}
-      ORIGINALMY_SECRET_KEY: ${ORIGINALMY_SECRET_KEY}
-      ORIGINALMY_CLIENT_ID: ${ORIGINALMY_CLIENT_ID}
-      ORIGINALMY_CRYPT_KEY: ${ORIGINALMY_CRYPT_KEY}
-      ORIGINALMY_CRYPT_IV: ${ORIGINALMY_CRYPT_IV}
-      REACT_APP_ORIGINALMY_CLIENT_ID: ${REACT_APP_ORIGINALMY_CLIENT_ID}
-      REACT_APP_ORIGINALMY_ENV: ${REACT_APP_ORIGINALMY_ENV}
+      PORT: 4000
+      APP_SERVER_PORT: 3001
+      API_HOST: https://openprescription-api.herokuapp.com
+      API_KEY: YR4TBVHMBB4HJKEDB7DC25KV29A3RD6X
+      APP_HOST: http://localhost:3001
+      ORIGINALMY_API_URL: https://api1.originalmy.com
     expose:
-      - ${REACT_APP_DOCTOR_CLIENT_PORT}
+      - 4000
     ports:
-      - ${REACT_APP_DOCTOR_CLIENT_PORT}:${REACT_APP_DOCTOR_CLIENT_PORT}
+      - 4000:4000
     volumes:
       - ./doctor-client/server:/home/node/openprescription/doctor-client/server
       - ./doctor-client/src:/home/node/openprescription/doctor-client/src
       - ./doctor-client/public:/home/node/openprescription/doctor-client/public
-    command: npm start
+    command: npm run dev
   phamacy-client:
     container_name: OpenPrescriptionPharmacyClient
     network_mode: host
-    build: 
+    build:
       context: ./pharmacy-client
       network: host
       dockerfile: Dockerfile
     environment:
-      PORT: ${REACT_APP_PHARMACY_CLIENT_PORT}
-      APP_SERVER_PORT: ${PHARMACY_SERVER_PORT}
-      APP_HOST: ${PHARMACY_CLIENT_HOST}
-      API_HOST: ${API_HOST}
-      API_KEY: ${API_KEY}
-      ORIGINALMY_API_URL: ${ORIGINALMY_API_URL}
-      ORIGINALMY_SECRET_KEY: ${ORIGINALMY_SECRET_KEY}
-      ORIGINALMY_CLIENT_ID: ${ORIGINALMY_CLIENT_ID}
-      ORIGINALMY_CRYPT_KEY: ${ORIGINALMY_CRYPT_KEY}
-      ORIGINALMY_CRYPT_IV: ${ORIGINALMY_CRYPT_IV}
-      REACT_APP_ORIGINALMY_CLIENT_ID: ${REACT_APP_ORIGINALMY_CLIENT_ID}
-      REACT_APP_ORIGINALMY_ENV: ${REACT_APP_ORIGINALMY_ENV}
+      PORT: 4001
+      APP_SERVER_PORT: 3002
+      API_HOST: https://openprescription-api.herokuapp.com
+      API_KEY: YR4TBVHMBB4HJKEDB7DC25KV29A3RD6X
+      APP_HOST: http://localhost:3002
     expose:
-      - ${REACT_APP_PHARMACY_CLIENT_PORT}
+      - 4001
     ports:
-      - ${REACT_APP_PHARMACY_CLIENT_PORT}:${REACT_APP_PHARMACY_CLIENT_PORT}
+      - 4001:4001
     volumes:
       - ./pharmacy-client/server:/home/node/openprescription/pharmacy-client/server
       - ./pharmacy-client/src:/home/node/openprescription/pharmacy-client/src
       - ./pharmacy-client/public:/home/node/openprescription/pharmacy-client/public
-    command: npm start
+    command: npm run dev
