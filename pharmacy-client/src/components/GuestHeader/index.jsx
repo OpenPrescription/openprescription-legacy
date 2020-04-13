@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -7,17 +7,42 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { useTranslation } from "react-i18next";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/Button";
+
+
 
 import logo from "../../assets/logo.svg";
 
+// const useStyles = makeStyles((theme) => ({
+//   menuButton: {
+//     marginRight: theme.spacing(2),
+//   },
+//   icon: {
+//     marginRight: theme.spacing(2),
+//   },
+// }));
+
 const useStyles = makeStyles((theme) => ({
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
   icon: {
     marginRight: theme.spacing(2),
   },
+  heroContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(8, 0, 6),
+  },
+  title: {
+    flexGrow: 1,
+    textTransform: 'uppercase'
+  },
+  menuItemBlock: {
+    display: 'block',
+    width: '100%'
+  }
 }));
+
 
 export default () => {
   const classes = useStyles();
@@ -40,7 +65,7 @@ export default () => {
     <header>
       <CssBaseline />
       <AppBar position="relative">
-        <Toolbar>
+        <Toolbar style={{display: 'flex', justifyContent: 'space-between'}}>
           <img src={logo} />
           <Button
             color="inherit"
