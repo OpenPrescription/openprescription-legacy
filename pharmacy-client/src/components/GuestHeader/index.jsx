@@ -21,13 +21,51 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
   const classes = useStyles();
+  const { i18n } = useTranslation();
+  const [language, setLanguage] = useState(i18n.language);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleSelectLanguage = (event, lang) => {
+    if (!lang) return setAnchorEl(event.currentTarget);
+    i18n.changeLanguage(lang);
+    setLanguage(lang);
+    setAnchorEl(null);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <header>
       <CssBaseline />
       <AppBar position="relative">
         <Toolbar>
           <img src={logo} />
+          <Button
+            color="inherit"
+            aria-controls="language-menu"
+            aria-haspopup="true"
+            onClick={handleSelectLanguage}
+          >
+            {language}
+            <KeyboardArrowDownIcon />
+          </Button>
         </Toolbar>
+        <Menu
+          id="language-menu"
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          keepMounted
+        >
+          <MenuItem className={classes.menuItemBlock} onClick={(e) => handleSelectLanguage(e, "en")}>
+            English
+          </MenuItem>
+          <MenuItem className={classes.menuItemBlock} onClick={(e) => handleSelectLanguage(e, "pt")}>
+            Português
+          </MenuItem>
+        </Menu>
       </AppBar>
     </header>
   );
