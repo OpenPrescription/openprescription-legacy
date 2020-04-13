@@ -16,15 +16,6 @@ import MenuItem from "@material-ui/core/Button";
 
 import logo from "../../assets/logo.svg";
 
-// const useStyles = makeStyles((theme) => ({
-//   menuButton: {
-//     marginRight: theme.spacing(2),
-//   },
-//   icon: {
-//     marginRight: theme.spacing(2),
-//   },
-// }));
-
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2),
