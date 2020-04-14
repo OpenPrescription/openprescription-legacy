@@ -109,7 +109,7 @@ export default () => {
             color="primary"
             className={button}
           >
-            Submit
+            <Trans i18nKey="submitButtonLabel">Submit</Trans>
           </Button>
         </Container>
       </form>
