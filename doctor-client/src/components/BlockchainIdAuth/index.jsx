@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import { Typography } from "@material-ui/core";
 import {
   loginStatus,
@@ -102,10 +102,12 @@ export default ({
           )}
         </div>
         <Typography component="p" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '20px', fontSize: '14px'}}>
-          Point your phone to this screen to capture the code.
+          <Trans i18nKey="scanQrcodeDescription">
+            Point your phone to this screen to capture the code.
+          </Trans>
         </Typography>
 
-        <Typography variant="body1">Doctor ID {doctorId}</Typography>
+        <Typography variant="body1"><Trans i18nKey="doctorId">Doctor ID</Trans> {doctorId}</Typography>
         <Typography variant="body1">Hash: {prescriptionHash}</Typography>
       </div>
     </div>

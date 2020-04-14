@@ -66,7 +66,9 @@ export default () => {
           <Grid item md={6} xs={12}>
             <Container maxWidth="sm" className={containerLogin}>
               <Typography variant="subtitle1">
-                Fill fields bellow to access the prescription.
+                <Trans i18nKey="fillFieldsDescription">
+                  Fill fields bellow to access the prescription.
+                </Trans>  
               </Typography>
               <TextField
                 autoFocus
@@ -85,8 +87,8 @@ export default () => {
               />
               {errors.documentId && (
                 <FormHelperText error={true}>
-                  <Trans i18nKey="documentIdRequired">
-                    Document ID is required
+                  <Trans i18nKey="namedRequired">
+                    Pharmacist name is required
                   </Trans>
                 </FormHelperText>
               )}
@@ -130,7 +132,7 @@ export default () => {
               {errors.companyName && (
                 <FormHelperText error={true}>
                   <Trans i18nKey="companyNameRequired">
-                    Document ID is required
+                    Pharmacy name is required
                   </Trans>
                 </FormHelperText>
               )}
@@ -161,7 +163,8 @@ export default () => {
                 color="primary"
                 className={button}
               >
-                Submit
+                <Trans i18nKey="submit">Submit</Trans>
+                
               </Button>
             </Container>
           </Grid>

@@ -321,12 +321,14 @@ export default () => {
               className={backButton}
               onClick={(e) => onReturn()}
             >
-              Back
+              <Trans i18nKey="backButton">
+                Back
+              </Trans>
             </Button>
           </div>
           {prescriptionData.isExpired && (
             <Alert severity="warning" className={alerts}>
-              <Trans i18nKey="prescriptionIsExired">
+              <Trans i18nKey="prescriptionIsExpired">
                 Prescription is expired
               </Trans>
             </Alert>
@@ -340,7 +342,11 @@ export default () => {
           )}
 
           <div className={gridTitle}>
-            <Typography variant="subtitle1">Doctor's information</Typography>
+            <Typography variant="subtitle1">
+              <Trans i18nKey="doctorInformation">
+                Doctor's information
+              </Trans>
+            </Typography>
           </div>
           <Grid container spacing={2}>
             <Grid item xs={6}>
@@ -383,7 +389,11 @@ export default () => {
           </Grid>
 
           <div className={gridTitle}>
-            <Typography variant="subtitle1">Patient’s information</Typography>
+            <Typography variant="subtitle1">
+              <Trans i18nKey="patientInformation">
+                Patient’s information
+              </Trans>
+            </Typography>
           </div>
 
           <Grid container spacing={2}>
@@ -419,7 +429,11 @@ export default () => {
           </Grid>
 
           <div className={gridTitle}>
-            <Typography variant="subtitle1">Medication information</Typography>
+            <Typography variant="subtitle1">
+              <Trans i18nKey="prescriptionInformation">
+                Prescription information
+              </Trans>
+            </Typography>
           </div>
 
           <Grid container spacing={2}>
@@ -493,7 +507,7 @@ export default () => {
               style={{ padding: "10px 0" }}
             >
               <VerifiedUserIcon style={{ marginRight: 10 }} />
-              {"  "} Digital Signature Verified
+              {"  "} <Trans i18nKey="digitalSignatureVerified">Digital Signature Verified</Trans>
             </Button>
           </div>
 
@@ -574,7 +588,7 @@ export default () => {
                     margin="dense"
                     id="purchaserDocumentId"
                     name="purchaserDocumentId"
-                    label="Purchaser Document ID"
+                    label={t("purchaserDocumentId")}
                     type="text"
                     fullWidth
                     required

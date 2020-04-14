@@ -63,14 +63,14 @@ export default ({ open, onCancel, onValidate }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={onCancel} color="primary">
-            <Trans i18nKey="cancel">Cancel</Trans>
+            <Trans i18nKey="cancelButtonLabel">Cancel</Trans>
           </Button>
           <Button
             type="submit"
             color="primary"
             onClick={handleSubmit(validateDoctorDoctorId)}
           >
-            <Trans i18nKey="submit">Submit</Trans>
+            <Trans i18nKey="submitButtonLabel">Submit</Trans>
           </Button>
         </DialogActions>
       </Dialog>

@@ -36,5 +36,11 @@ export default {
   homeScreenButton: 'Iniciar prescrição',
   prescriptionSent: 'Obrigado, sua prescrição foi enviada!',
   prescriptionUploaded: 'Prescrição enviada',
-  validateIdentity: 'Enviar e validar minha identidade'
+  validateIdentity: 'Enviar e validar minha identidade',
+  companyIdRequired: 'CPNJ é obrigatório',
+  companyNameRequired: 'Nome da instituição é obrigatório',
+  signPrescriptionTitle: 'Assinatura Digital',
+  signPrescriptionDescription: 'Agora abra o app OriginalMy e escaneie o QR-Code com o seu Blockchain ID para validar sua identidade e assinar digitalmente',
+  scanQrcodeDescription: 'Use o Blockchain ID e aponte seu celular para esta tela',
+  
 };
