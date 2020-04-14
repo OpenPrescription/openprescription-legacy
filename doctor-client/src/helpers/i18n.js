@@ -18,8 +18,15 @@ i18n
   .use(detector)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
+    detection: {
+    
+      // order and from where user language should be detected
+      order: ['navigator', 'htmlTag', 'path', 'subdomain', 'querystring', 'cookie', 'localStorage'],
+      
+    },
+
     resources,
-    lng: "en",
+    //lng: "pt", // commented: enforces default language if enabled
 
     keySeparator: false, // we do not use keys in form messages.welcome
 
