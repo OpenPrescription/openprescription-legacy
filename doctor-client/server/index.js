@@ -75,8 +75,22 @@ app.get("*", function (req, res) {
   res.sendFile(path.resolve(__dirname, "../build", "index.html"));
 });
 
-const port = process.env.APP_SERVER_PORT || process.env.PORT || 1337;
+const port = process.env.APP_SERVER_PORT || process.env.PORT || 1338;
 
 app.listen(port, function () {
   console.log(`Express server running on ${port}`);
 });
+
+if (process.env.NODE_ENV === "production") {
+  const appHTTP = express();
+  appHTTP.get("*", (req, res) => {
+    console.log("redirect", process.env.NODE_ENV);
+    res.redirect(`https://${req.headers.host}${req.url}`);
+  });
+
+  appHTTP.listen(port, err => {
+    if (err) throw err;
+    else console.log(`http port running at http://localhost:${port}`);
+  });
+}
+

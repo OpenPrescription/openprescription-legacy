@@ -41,3 +41,16 @@ app.listen(process.env.PORT || 53535, function (PORT) {
     process.env.NODE_ENV
   );
 });
+
+if (process.env.NODE_ENV === "production") {
+  const appHTTP = express();
+  appHTTP.get("*", (req, res) => {
+    console.log("redirect", process.env.NODE_ENV);
+    res.redirect(`https://${req.headers.host}${req.url}`);
+  });
+
+  appHTTP.listen(port, err => {
+    if (err) throw err;
+    else console.log(`http port running at http://localhost:${port}`);
+  });
+}
