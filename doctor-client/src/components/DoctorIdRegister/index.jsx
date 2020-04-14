@@ -10,23 +10,14 @@ import { Trans, useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { validateDoctorId } from "../../data/doctors";
-import { setDoctorId } from "../../helpers/storage";
 
-export default ({ open, onCancel, onValidate }) => {
+export default ({ open, onCancel, onSubmit }) => {
   const { t } = useTranslation();
   const { register, handleSubmit, watch, errors } = useForm();
 
   const validateDoctorDoctorId = async ({ doctorId }) => {
-    try {
-      const response = await validateDoctorId(doctorId);
-      if (response.data.isValid) {
-        setDoctorId(doctorId);
-      }
-      if (typeof onValidate === "function") {
-        onValidate(response.data.isValid, doctorId);
-      }
-    } catch (err) {
-      console.error(err);
+    if (typeof onSubmit === "function") {
+      onSubmit(doctorId);
     }
   };
 

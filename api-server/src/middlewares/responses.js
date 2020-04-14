@@ -24,8 +24,8 @@ const error = (res) => {
 };
 
 const fail = (res) => {
-  return (validations) => {
-    return res.status(422).json({
+  return (validations, status = 422) => {
+    return res.status(status).json({
       status: "fail",
       validations,
     });

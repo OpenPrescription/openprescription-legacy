@@ -36,5 +36,6 @@ export default {
   homeScreenButton: 'Iniciar prescrição',
   prescriptionSent: 'Obrigado, sua prescrição foi enviada!',
   prescriptionUploaded: 'Prescrição enviada',
-  validateIdentity: 'Enviar e validar minha identidade'
+  validateIdentity: 'Enviar e validar minha identidade',
+  doctorInvalidErrorMessage: 'Não conseguimos validar o seu CRM. Por favor entre em contato.'
 };

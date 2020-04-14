@@ -15,6 +15,21 @@ const getOrCreate = async ({ name, email, blockchainid, documentId }) => {
   });
 };
 
+const validateData = async (doctorId, data) => {
+  Doctor.update(
+    {
+      lastVerificationAt: new Date(),
+      doctorExtraInfo: JSON.stringify(data),
+    },
+    {
+      where: {
+        documentId: doctorId,
+      },
+    }
+  );
+};
+
 export default {
   getOrCreate,
+  validateData,
 };

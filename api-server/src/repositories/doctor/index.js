@@ -1,3 +1,4 @@
 import store from "./store";
+import validate from "./validate";
 
-export default { store };
+export default { store, validate };

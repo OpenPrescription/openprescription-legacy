@@ -13,6 +13,7 @@ export default ({ prescription, onSigned, doneAuth = false }) => {
     "email",
     "id",
     "blockchainid",
+    "country",
     `ref=${JSON.stringify({
       doctorId: getDoctorId(),
       prescriptionHash: prescription.hash,

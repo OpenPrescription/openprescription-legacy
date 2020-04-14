@@ -1,14 +1,11 @@
 import axios from "axios";
 
-export const validateDoctorId = async (doctorId) => {
-  return {
-    data: {
-      isValid: true,
-    }
-  };
-  return axios.get("/api/open-prescription-proxy/doctors/validate", {
-    params: {
-      doctorId,
+export const validateDoctorId = async (doctorId, userName, userCountry) => {
+  return axios.post("/api/proxy/doctors/validate", {
+    doctor: {
+      id: doctorId,
+      name: userName,
+      country: userCountry,
     },
   });
 };
