@@ -1,2 +1,4 @@
 .env
 .git
+.yarn-integrity
+package-lock.json
