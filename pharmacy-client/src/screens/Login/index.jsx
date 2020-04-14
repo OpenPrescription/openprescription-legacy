@@ -171,7 +171,7 @@ export default () => {
           {matches && (
             <Grid item xs={6}>
               <PharmacyLogin
-                style={{ position: "absolute", bottom: 0, display: "block" }}
+                style={{ position: "absolute", bottom: 0, display: "block", height: '70%' }}
               />
             </Grid>
           )}

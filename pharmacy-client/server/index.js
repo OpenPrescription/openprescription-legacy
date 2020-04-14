@@ -8,6 +8,14 @@ const path = require("path");
 
 const app = express();
 
+if (process.env.NODE_ENV === "production") {
+  app.use((req, res, next) => {
+    if (req.header("x-forwarded-proto") !== "https")
+      res.redirect(`https://${req.header("host")}${req.url}`);
+    else next();
+  });
+}
+
 app.use(express.static(path.resolve(__dirname, "../build")));
 
 app.use(
@@ -28,16 +36,3 @@ app.get("*", function (req, res) {
 app.listen(port, function () {
   console.log(`Express server running on ${port}`);
 });
-
-if (process.env.NODE_ENV === "production") {
-  const appHTTP = express();
-  appHTTP.get("*", (req, res) => {
-    console.log("redirect", process.env.NODE_ENV);
-    res.redirect(`https://${req.headers.host}${req.url}`);
-  });
-
-  appHTTP.listen(port, err => {
-    if (err) throw err;
-    else console.log(`http port running at http://localhost:${port}`);
-  });
-}

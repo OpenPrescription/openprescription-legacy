@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
+import "newrelic";
 import express from "express";
 import path from "path";
 import bodyParser from "body-parser";
@@ -12,17 +13,25 @@ i18n.configure({
   locales: ["en", "pt"],
   directory: __dirname + "/locales",
   register: global,
-  defaultLocale: 'en', 
+  defaultLocale: "en",
 });
 
 const app = express();
+
+if (process.env.NODE_ENV === "production") {
+  app.use((req, res, next) => {
+    if (req.header("x-forwarded-proto") !== "https")
+      res.redirect(`https://${req.header("host")}${req.url}`);
+    else next();
+  });
+}
 
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(bodyParser.urlencoded({ extended: true, limit: "150mb" }));
 app.use(express.json({ limit: "100mb" }));
 
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
+app.engine("handlebars", exphbs());
+app.set("view engine", "handlebars");
 
 app.use(i18n.init);
 
@@ -41,16 +50,3 @@ app.listen(process.env.PORT || 53535, function (PORT) {
     process.env.NODE_ENV
   );
 });
-
-if (process.env.NODE_ENV === "production") {
-  const appHTTP = express();
-  appHTTP.get("*", (req, res) => {
-    console.log("redirect", process.env.NODE_ENV);
-    res.redirect(`https://${req.headers.host}${req.url}`);
-  });
-
-  appHTTP.listen(port, err => {
-    if (err) throw err;
-    else console.log(`http port running at http://localhost:${port}`);
-  });
-}
