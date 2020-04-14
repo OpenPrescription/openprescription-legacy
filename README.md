@@ -1,7 +1,13 @@
 ## Open Prescription
 #### Open Prescription is a system for authenticating and signing medical prescriptions by validated doctors using a digital certificate and drug dispensing tracking
 
+---
+
+[20200412: UPDATE]
 ** SPLITTING REPOS **
+This repo will be removed soon.
+
+---
 
 
 The idea grew during the COVID-19 pandemic, and because of quarantines, visiting doctors could put people in risk of being contaminated.
