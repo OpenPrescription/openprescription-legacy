@@ -22,7 +22,7 @@
     "circular-json": "^0.5.9",
     "dotenv": "^8.2.0",
     "ejs": "^2.5.6",
-    "express": "^4.15.2",
+    "express": "^4.17.3",
     "express-handlebars": "^4.0.3",
     "html-pdf": "^2.2.0",
     "i18n": "^0.8.6",
